@@ -1,4 +1,5 @@
 # Setup environment for MAC OS
+--updated 2/8/2023--
 
 ## Installed Node, Git, Yarn, NPM, Visual Studio.
 
@@ -73,5 +74,42 @@ document: https://reactnative.dev/docs/environment-setup?os=windows&platform=and
 6. Chạy thử:
 
 
---2/8/2023--
-    
+--updated 2/8/2023--
+
+
+
+# Add Splash screen / App logo for APP 
+Follow this guide link: https://youtu.be/_hgsAlPTGXY
+
+## Android Environment:
+  ### Add Logo for android: 
+  1. Chose a image to make logo for app “png, jpg”;
+  2. Go to https://icon.kitchen/ to export file;
+  ![forEachResult](./readmeImg/iconKitchen.png)
+  3. Get the necessary files for the app, must be have two files about ***ic_launcher.png*** and ***ic_launcher_round.png***;
+  ![forEachResult](./readmeImg/androidIcon.png);
+    - Lưu ý chỉnh sửa ảnh cho nó phù hợp với kích cỡ của màn hình, remove background;
+
+  4. Rebuild app again to check result;
+  ![forEachResult](./readmeImg/doneAddIconAndroid.png);
+
+
+
+## IOS Environment:
+
+  ### Add Logo for android:
+  1. init a new project: `npx react-native@latest init AwesomeProject`;
+  - Default logo after build new project;
+  ![forEachResult](./readmeImg/defautLogoIos.png)
+  2. Go to https://icon.kitchen/ to export file;
+  ![forEachResult](./readmeImg/iconKitchen.png)
+  3. Open Xcode to start change logo:
+    ![forEachResult](./readmeImg/openXcodeDefault.png)
+  
+  4. Move image exported into Xcode: 
+  ![forEachResult](./readmeImg/openXcodeSetNewLogo.png)
+
+  5. Rebuild end check results:
+    ![forEachResult](./readmeImg/doneChangeLogoIos.png)
+
+  
