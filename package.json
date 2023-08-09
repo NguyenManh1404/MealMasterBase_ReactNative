@@ -7,11 +7,23 @@
     "ios": "react-native run-ios",
     "start": "react-native start",
     "test": "jest",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "android:clean": "cd android && ./gradlew clean",
+    "podInstall": "cd ios && pod install && cd ..",
+    "podNewClear": "cd ios && rm -rf Pods/* && rm -rf Podfile.lock && cd ..",
+    "newclear": "yarn removeCachedFiles && yarn removeCachedMetro && yarn podNewClear && yarn && yarn android:clean && yarn podInstall"
   },
   "dependencies": {
+    "@react-navigation/material-bottom-tabs": "^6.2.16",
+    "@react-navigation/native": "^6.1.7",
+    "@react-navigation/native-stack": "^6.9.13",
     "react": "18.1.0",
-    "react-native": "0.70.6"
+    "react-native": "0.70.6",
+    "react-native-pager-view": "^6.2.0",
+    "react-native-paper": "^5.10.0",
+    "react-native-safe-area-context": "^4.7.1",
+    "react-native-screens": "^3.24.0",
+    "react-native-vector-icons": "^10.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",
