@@ -11,13 +11,18 @@
     "android:clean": "cd android && ./gradlew clean",
     "podInstall": "cd ios && pod install && cd ..",
     "podNewClear": "cd ios && rm -rf Pods/* && rm -rf Podfile.lock && cd ..",
+    "removeCachedFiles": "rm -rf $TMPDIR/react-* && watchman watch-del-all && rm -rf ios/build/ModuleCache/* && rm -rf ios/build/* && rm -rf node_modules/* && rm -rf yarn.lock",
+    "removeCachedMetro": "npm cache clean --force && rm -rf ~/Library/Caches/com.facebook.ReactNativeBuild && yarn cache clean --verbose && rm -rf $TMPDIR/metro-bundler-cache-*",
     "newclear": "yarn removeCachedFiles && yarn removeCachedMetro && yarn podNewClear && yarn && yarn android:clean && yarn podInstall"
   },
   "dependencies": {
+    "@react-native-async-storage/async-storage": "^1.19.1",
     "@react-navigation/material-bottom-tabs": "^6.2.16",
     "@react-navigation/native": "^6.1.7",
     "@react-navigation/native-stack": "^6.9.13",
+    "i18next": "^23.4.3",
     "react": "18.1.0",
+    "react-i18next": "^13.0.3",
     "react-native": "0.70.6",
     "react-native-pager-view": "^6.2.0",
     "react-native-paper": "^5.10.0",

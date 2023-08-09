@@ -1,3 +1,5 @@
+<details>
+    <summary><b>Set Up Environment</b></summary>
 # Setup environment for MAC OS
 
 --updated 2/8/2023--
@@ -77,13 +79,16 @@ document: https://reactnative.dev/docs/environment-setup?os=windows&platform=and
    - Theo templay TypeScript: **npx react-native init AwesomeTSProject --template react-native-template-typescript**
 
 6. Chạy thử:
-
+</details>
 --updated 2/8/2023--
 
 # Add Splash screen / App logo for APP
 
 Follow this guide link: https://youtu.be/_hgsAlPTGXY
 
+<details>
+    <summary><b>Android Environment</b></summary>
+    
 ## Android Environment:
 
 ### Add Logo for android:
@@ -227,6 +232,11 @@ public class SplashActivity extends AppCompatActivity {
 5. Rebuild app and check results;
    ![Alt text](readmeImg/DoneSplashAndroid.png)
 
+</details>
+
+<details>
+    <summary><b>IOS Environment</b></summary>
+
 ## IOS Environment:
 
 ### Add Logo for IOS:
@@ -328,6 +338,8 @@ module.exports = {
 ```
 
 3. Checking results;
+
+</details>
 
 # Add quickly command;
 

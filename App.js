@@ -11,11 +11,16 @@ import {
   Tooltip,
 } from 'react-native-paper';
 
+import {initI18n} from './src/i18n';
+initI18n();
+
 import Icon from 'react-native-vector-icons/FontAwesome5';
 
 import {createMaterialBottomTabNavigator} from '@react-navigation/material-bottom-tabs';
 import {SafeAreaView} from 'react-native-safe-area-context';
 
+import i18next from 'i18next';
+import {useTranslation} from 'react-i18next';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const Tab = createMaterialBottomTabNavigator();
@@ -27,11 +32,26 @@ const HomeScreen = () => {
   const [visible, setVisible] = React.useState(true);
   const [searchQuery, setSearchQuery] = React.useState('');
 
+  const [language, setLanguage] = React.useState('en');
+
+  const {t} = useTranslation();
+
+  const updateLanguage = async selectedLanguage => {
+    if (selectedLanguage) {
+      // update key in async storage
+      // await storeData(STORAGE_KEY.LANGUAGE, selectedLanguage);
+      setLanguage(language === 'vi' ? 'en' : 'vi');
+      i18next.changeLanguage(language);
+      // handle any other handlers here
+      // Navigation.mergeOptions
+    }
+  };
+
   const onChangeSearch = query => setSearchQuery(query);
 
   const LeftContent = props => <Avatar.Icon {...props} icon="folder" />;
   return (
-    <SafeAreaView style={{flex: 1}}>
+    <SafeAreaView>
       <ScrollView>
         <Searchbar
           placeholder="Search"
@@ -39,6 +59,12 @@ const HomeScreen = () => {
           value={searchQuery}
         />
         <Text>HomeScreen</Text>
+        <Text>{t('onboarding.hello')}</Text>
+        <Button title="Change Language" onPress={updateLanguage} />
+
+        <Icon.Button name="facebook" onPress={updateLanguage} solid>
+          Login with Facebook
+        </Icon.Button>
         <Avatar.Icon size={24} icon="folder" color="yellow" />
         <Icon name="rocket" size={30} color="#900" solid />
         <Button
@@ -94,10 +120,6 @@ const HomeScreen = () => {
         <Tooltip title="Selected Camera">
           <IconButton icon="camera" selected size={24} onPress={() => {}} />
         </Tooltip>
-
-        <Icon.Button name="facebook" onPress={this.loginWithFacebook} solid>
-          Login with Facebook
-        </Icon.Button>
       </ScrollView>
     </SafeAreaView>
   );
@@ -133,10 +155,7 @@ const ProfileScreen = () => {
 const App = () => {
   return (
     <NavigationContainer>
-      <Tab.Navigator
-        initialRouteName="Home"
-        activeColor="#e91e63"
-        barStyle={{backgroundColor: 'white'}}>
+      <Tab.Navigator initialRouteName="Home" activeColor="#e91e63">
         <Tab.Screen
           name="Home"
           component={HomeScreen}
