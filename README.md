@@ -718,3 +718,135 @@ export default App;
 ```
 
 </details>
+
+<details>
+    <summary><b>Add Multi Language</b></summary>
+
+# Add Multi Language;
+
+1. Install these libraries:
+
+```js
+  yarn add i18next
+  yarn add react-i18next
+  yarn add @react-native-async-storage/async-storage
+```
+
+2. Create a folder contains your translation as below:
+
+```js
+// Create a folder contains your locales like this:
+├── locales
+│   ├── en ├── strings.json
+│   ├── vi ├── strings.json
+│   └── index.js
+
+// Example in en/strings.json
+	{
+	  "onboarding": {
+	    "hello": "Hello"
+	  },
+  }
+// Example in vi/strings.json
+	{
+	  "onboarding": {
+	    "hello": "Xin chào"
+	  },
+  }
+
+// Update code in index.js
+export default {
+  vi: {
+    translation: require('./vi/strings.json'),
+  },
+  en: {
+    translation: require('./en/strings.json'),
+  },
+};
+
+// create a file name initI18n.js to configure how it translates
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import i18n from 'i18next';
+import {initReactI18next} from 'react-i18next';
+import { Platform, NativeModules } from 'react-native';
+import locales from '../locales'; // path to your locales folder
+
+const LANGUAGE_KEY = '@language';
+const DEFAULT_LANGUAGE = 'vi'; // you can define it here
+
+const getDeviceLanguage = () => {
+  const appLanguage =
+    Platform.OS === 'ios'
+      ? NativeModules.SettingsManager.settings.AppleLocale ||
+        NativeModules.SettingsManager.settings.AppleLanguages[0]
+      : NativeModules.I18nManager.localeIdentifier;
+
+  return appLanguage.search(/-|_/g) !== -1
+    ? appLanguage.slice(0, 2)
+    : appLanguage;
+};
+
+const languageDetector = {
+  init: () => {},
+  type: 'languageDetector',
+  async: true, // flags below detection to be async
+  detect: async (callback) => {
+    const userLang = await AsyncStorage.getItem(LANGUAGE_KEY);
+
+    const deviceLang = userLang || getDeviceLanguage() || DEFAULT_LANGUAGE;
+    callback(deviceLang);
+  },
+  cacheUserLanguage: () => {},
+};
+
+export const initI18n = () => {
+  i18n
+		.use(languageDetector)
+		.use(initReactI18next)
+		.init({
+      compatibilityJSON: 'v3',
+      fallbackLng: DEFAULT_LANGUAGE,
+      debug: __DEV__, // set to log debug on terminal
+      resources: locales,
+      interpolation: {
+        escapeValue: false,
+      },
+      react: {useSuspense: false},
+    });
+};
+
+
+// use initI18n() function in index.js (root project)
+initI18n();
+
+// use translate in jsx
+import {useTranslation} from 'react-i18next';
+import {View, Button, Text} from 'react-native';
+
+const Home = () => {
+	 const [language, setLanguage] = React.useState('en');
+
+  const {t} = useTranslation();
+
+  const updateLanguage = async selectedLanguage => {
+    if (selectedLanguage) {
+      // update key in async storage
+      // await storeData(STORAGE_KEY.LANGUAGE, selectedLanguage);
+      setLanguage(language === 'vi' ? 'en' : 'vi');
+      i18next.changeLanguage(language);
+      // handle any other handlers here
+      // Navigation.mergeOptions
+    }
+  };
+
+	return (
+		<View>
+			<Text>{t('onboarding.hello')}</Text>
+			<Button title='Change Language' onPress={onUpdateLanguage} />
+		</View>
+	)
+}
+
+```
+
+</details>
