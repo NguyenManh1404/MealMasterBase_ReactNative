@@ -522,13 +522,13 @@ export default App;
 
 ## Bottom Tab Navigator
 
-link: https://reactnavigation.org/docs/material-bottom-tab-navigator/
+link: https://reactnavigation.org/docs/bottom-tab-navigator
 
 1. Add library :
 
 ### Use are made sure installed all library here
 
-- **yarn add @react-navigation/material-bottom-tabs react-native-paper react-native-vector-icons** :
+- **yarn add @react-navigation/bottom-tabs react-native-paper react-native-vector-icons** :
 - **yarn add @react-navigation/native**:
 - **yarn add react-native-screens react-native-safe-area-context**
 - **yarn add @react-navigation/native-stack**
@@ -553,12 +553,12 @@ import {
 
 import Icon from 'react-native-vector-icons/FontAwesome5';
 
-import {createMaterialBottomTabNavigator} from '@react-navigation/material-bottom-tabs';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {SafeAreaView} from 'react-native-safe-area-context';
 
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
-const Tab = createMaterialBottomTabNavigator();
+const Tab = createBottomTabNavigator();
 
 // const Stack = createNativeStackNavigator();
 
