@@ -1,14 +1,16 @@
 import {createSlice} from '@reduxjs/toolkit';
+
+const initialState = {
+  language: 'en',
+};
 const appSlice = createSlice({
   name: 'app',
-  initialState: {
-    language: 'en',
-  },
+  initialState,
   reducers: {
     setLanguage: (state, action) => action.payload,
-    clearUser: () => null,
+    setDefault: () => initialState,
   },
 });
 
-export const {setUser, clearUser} = appSlice.actions;
+export const {setLanguage, setDefault} = appSlice.actions;
 export default appSlice.reducer;

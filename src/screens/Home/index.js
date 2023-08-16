@@ -15,6 +15,7 @@ import {
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import {useDispatch, useSelector} from 'react-redux';
 import LocalImage from '../../components/LocalImage';
+import {setLanguage as setLanguageRedux} from '../../redux/AppRedux';
 import {clearUser, setUser} from '../../redux/AuthRedux';
 
 const HomeScreen = () => {
@@ -22,7 +23,8 @@ const HomeScreen = () => {
   const [visible, setVisible] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const user = useSelector(state => state.auth);
-  console.log('🚀 ~ file: index.js:25 ~ HomeScreen ~ user:', user);
+  const app = useSelector(state => state.app);
+
   const dispatch = useDispatch();
 
   const changeUser = () => {
@@ -37,6 +39,7 @@ const HomeScreen = () => {
 
   const updateLanguage = async selectedLanguage => {
     if (selectedLanguage) {
+      await dispatch(setLanguageRedux({language: language}));
       setLanguage(language === 'vi' ? 'en' : 'vi');
       i18next.changeLanguage(language);
     }
@@ -54,6 +57,7 @@ const HomeScreen = () => {
           value={searchQuery}
         />
         <Text>HomeScreen {user?.name}</Text>
+        <Text>{app.language}</Text>
         <Text>{t('onboarding.hello')}</Text>
 
         <Icon.Button name="user" onPress={changeUser} solid>
@@ -67,6 +71,7 @@ const HomeScreen = () => {
         <Icon.Button name="facebook" onPress={updateLanguage} solid>
           Change Language
         </Icon.Button>
+
         <Avatar.Icon size={24} icon="folder" color="yellow" />
         <Icon name="rocket" size={30} color="#900" solid />
         <Button

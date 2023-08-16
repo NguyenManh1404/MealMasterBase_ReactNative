@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {combineReducers, configureStore} from '@reduxjs/toolkit';
-import {persistReducer} from 'redux-persist';
+import {persistReducer, persistStore} from 'redux-persist';
 import thunk from 'redux-thunk';
 import appReducer from './AppRedux';
 import authReducer from './AuthRedux';
@@ -24,3 +24,4 @@ export const store = configureStore({
   devTools: true,
   middleware: [thunk],
 });
+export const persistor = persistStore(store);

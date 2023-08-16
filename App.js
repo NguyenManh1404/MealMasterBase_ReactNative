@@ -4,15 +4,13 @@ import {
 } from '@react-navigation/native';
 import React from 'react';
 import {Provider} from 'react-redux';
-import {persistStore} from 'redux-persist';
 import {PersistGate} from 'redux-persist/integration/react';
 import {initI18n} from './src/i18n';
 import {MainNavigator} from './src/navigation/stack';
-import {store} from './src/redux/store';
-initI18n();
-const navigationRef = createNavigationContainerRef();
+import {persistor, store} from './src/redux/store';
+initI18n(); //import multiLanguage
 
-let persistor = persistStore(store);
+const navigationRef = createNavigationContainerRef();
 
 const AppWrapper = () => {
   return <MainNavigator isAbleToGoHome={true} isAuthenticated={true} />;

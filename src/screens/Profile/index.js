@@ -1,18 +1,30 @@
 import React from 'react';
-import {SafeAreaView, StyleSheet, Text} from 'react-native';
-import {useSelector} from 'react-redux';
+import {SafeAreaView, Text, TouchableOpacity} from 'react-native';
+import {useDispatch, useSelector} from 'react-redux';
+import {setLanguage} from '../../redux/AppRedux';
 
 const ProfileScreen = () => {
   const user = useSelector(state => state.auth);
-  console.log('🚀 ~ file: index.js:7 ~ ProfileScreen ~ user:', user);
+  const app = useSelector(state => state.app);
+
+  const dispatch = useDispatch();
+
+  const changeTheme = () => {
+    dispatch(setLanguage({language: 'vi'}));
+  };
 
   return (
     <SafeAreaView>
-      <Text>ProfileScreen{user?.name}</Text>
+      <Text>
+        ProfileScreen{user?.name} {app.language}
+      </Text>
+      <TouchableOpacity onPress={changeTheme}>
+        <Text>Change Language: {app.language}</Text>
+      </TouchableOpacity>
     </SafeAreaView>
   );
 };
 
 export default ProfileScreen;
 
-const styles = StyleSheet.create({});
+// const styles = StyleSheet.create({});
