@@ -3,11 +3,16 @@ import {
   createNavigationContainerRef,
 } from '@react-navigation/native';
 import React from 'react';
+import {Provider} from 'react-redux';
+import {persistStore} from 'redux-persist';
+import {PersistGate} from 'redux-persist/integration/react';
 import {initI18n} from './src/i18n';
 import {MainNavigator} from './src/navigation/stack';
+import {store} from './src/redux/store';
 initI18n();
-
 const navigationRef = createNavigationContainerRef();
+
+let persistor = persistStore(store);
 
 const AppWrapper = () => {
   return <MainNavigator isAbleToGoHome={true} isAuthenticated={true} />;
@@ -16,7 +21,11 @@ const AppWrapper = () => {
 const App = () => {
   return (
     <NavigationContainer ref={navigationRef}>
-      <AppWrapper />
+      <Provider store={store}>
+        <PersistGate loading={true} persistor={persistor}>
+          <AppWrapper />
+        </PersistGate>
+      </Provider>
     </NavigationContainer>
   );
 };

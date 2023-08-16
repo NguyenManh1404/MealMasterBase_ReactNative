@@ -41,12 +41,10 @@ const languageDetectorPlugin = {
       }
     } catch (error) {}
   },
-  cacheUserLanguage: function (language) {
-    // try {
-    //   useStore.setState({
-    //     language,
-    //   });
-    // } catch (error) {}
+  cacheUserLanguage: async function (language) {
+    try {
+      await AsyncStorage.setItem(LANGUAGE_KEY, language);
+    } catch (error) {}
   },
 };
 

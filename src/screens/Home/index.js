@@ -1,8 +1,8 @@
 import {useNavigation} from '@react-navigation/core';
 import i18next from 'i18next';
-import React from 'react';
+import React, {useState} from 'react';
 import {useTranslation} from 'react-i18next';
-import {Image, ScrollView, Text} from 'react-native';
+import {Image, SafeAreaView, ScrollView, Text} from 'react-native';
 import {
   Avatar,
   Banner,
@@ -12,27 +12,33 @@ import {
   Searchbar,
   Tooltip,
 } from 'react-native-paper';
-import {SafeAreaView} from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/FontAwesome5';
+import {useDispatch, useSelector} from 'react-redux';
 import LocalImage from '../../components/LocalImage';
+import {clearUser, setUser} from '../../redux/AuthRedux';
 
 const HomeScreen = () => {
   const {navigate} = useNavigation();
-  const [visible, setVisible] = React.useState(true);
-  const [searchQuery, setSearchQuery] = React.useState('');
+  const [visible, setVisible] = useState(true);
+  const [searchQuery, setSearchQuery] = useState('');
+  const user = useSelector(state => state.auth);
+  console.log('🚀 ~ file: index.js:25 ~ HomeScreen ~ user:', user);
+  const dispatch = useDispatch();
 
-  const [language, setLanguage] = React.useState('en');
+  const changeUser = () => {
+    dispatch(setUser({name: 'Mo Yeu Giau'}));
+  };
+  const clearUsers = () => {
+    dispatch(clearUser());
+  };
+  const [language, setLanguage] = useState('en');
 
   const {t} = useTranslation();
 
   const updateLanguage = async selectedLanguage => {
     if (selectedLanguage) {
-      // update key in async storage
-      // await storeData(STORAGE_KEY.LANGUAGE, selectedLanguage);
       setLanguage(language === 'vi' ? 'en' : 'vi');
       i18next.changeLanguage(language);
-      // handle any other handlers here
-      // Navigation.mergeOptions
     }
   };
 
@@ -47,12 +53,19 @@ const HomeScreen = () => {
           onChangeText={onChangeSearch}
           value={searchQuery}
         />
-        <Text>HomeScreen</Text>
+        <Text>HomeScreen {user?.name}</Text>
         <Text>{t('onboarding.hello')}</Text>
-        <Button title="Change Language" onPress={updateLanguage} />
+
+        <Icon.Button name="user" onPress={changeUser} solid>
+          Change User
+        </Icon.Button>
+
+        <Icon.Button name="user" onPress={clearUsers} solid>
+          Clear User
+        </Icon.Button>
 
         <Icon.Button name="facebook" onPress={updateLanguage} solid>
-          Login with Facebook
+          Change Language
         </Icon.Button>
         <Avatar.Icon size={24} icon="folder" color="yellow" />
         <Icon name="rocket" size={30} color="#900" solid />

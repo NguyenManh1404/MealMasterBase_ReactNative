@@ -1,4 +1,11 @@
 {
+  "bottomTab": {
+    "home": "Trang chủ",
+    "favorite": "Yêu thích",
+    "recipe": "Công thức",
+    "notification": "Thông báo",
+    "profile": "Hồ sơ"
+  },
   "onboarding": {
     "hello": "Xin chào"
   }

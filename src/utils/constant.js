@@ -11,6 +11,7 @@ const IS_IOS = PLATFORM === 'ios';
 const IS_ANDROID = PLATFORM === 'android';
 const DEFAULT_LANGUAGE = 'en';
 const SUPPORTED_LANGUAGES = ['en', 'vi'];
+const LANGUAGE_KEY = '@language';
 
 const APP_THEME = {
   ...DefaultTheme,
@@ -27,6 +28,7 @@ export {
   DEFAULT_LANGUAGE,
   IS_ANDROID,
   IS_IOS,
+  LANGUAGE_KEY,
   SCREEN_HEIGHT,
   SCREEN_WIDTH,
   SUPPORTED_LANGUAGES,

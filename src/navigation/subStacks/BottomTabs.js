@@ -2,28 +2,14 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import React, {useMemo} from 'react';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useTranslation} from 'react-i18next';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {APP_COLORS} from '../../themes/colors';
+import {LANGUAGE_KEY} from '../../utils/constant';
 import {ROUTES, ROUTE_NAMES} from '../routes';
 
 const BottomTabNavigator = createBottomTabNavigator();
-
-export const BOTTOMTAB_OPTIONS = {
-  // tabBarShowLabel: true, //Luôn hiển thị tên và icon
-  headerShadowVisible: true,
-  headerTitleAlign: 'center',
-  tabBarHideOnKeyboard: true, //  Ẩn thanh điều hướng khi bàn phím hiển thị
-  tabBarInactiveTintColor: APP_COLORS.greyL2,
-  tabBarStyle: {
-    elevation: 0,
-    borderWidth: 0,
-    backgroundColor: 'red',
-  },
-  tabBarBadgeStyle: {
-    //điều chỉnh hiển thị số lượng thông báo
-    fontSize: 14,
-  },
-};
 
 export const PARENT_BOTTOM_TAB_SCREENS = [
   ROUTE_NAMES.HomeScreen,
@@ -34,13 +20,15 @@ export const PARENT_BOTTOM_TAB_SCREENS = [
 ];
 
 const BottomTabs = () => {
+  const {t} = useTranslation();
+  const currentLanguage = AsyncStorage.getItem(LANGUAGE_KEY);
   const BOTTOM_TABS = useMemo(() => {
     return [
       {
         name: ROUTE_NAMES.HomeScreen,
         component: ROUTES.HomeScreen,
         options: {
-          tabBarLabel: 'Home',
+          tabBarLabel: t('bottomTab.home'),
           tabBarIcon: ({color, focused}) => (
             <MaterialCommunityIcons
               name={focused ? 'home' : 'home-outline'}
@@ -56,7 +44,7 @@ const BottomTabs = () => {
         name: ROUTE_NAMES.FavoriteScreen,
         component: ROUTES.FavoriteScreen,
         options: {
-          tabBarLabel: 'Favorite',
+          tabBarLabel: t('bottomTab.favorite'),
           tabBarIcon: ({color, focused}) => (
             <FontAwesome
               name={focused ? 'heart' : 'heart-o'}
@@ -72,7 +60,7 @@ const BottomTabs = () => {
         name: ROUTE_NAMES.RecipeScreen,
         component: ROUTES.RecipeScreen,
         options: {
-          tabBarLabel: 'Recipe',
+          tabBarLabel: t('bottomTab.recipe'),
           tabBarIcon: ({color}) => (
             <MaterialCommunityIcons
               name="plus-circle"
@@ -88,7 +76,7 @@ const BottomTabs = () => {
         name: ROUTE_NAMES.NotificationScreen,
         component: ROUTES.NotificationScreen,
         options: {
-          tabBarLabel: 'Notification',
+          tabBarLabel: t('bottomTab.notification'),
           tabBarIcon: ({color, focused}) => (
             <MaterialCommunityIcons
               name={focused ? 'bell' : 'bell-outline'}
@@ -105,8 +93,7 @@ const BottomTabs = () => {
         name: ROUTE_NAMES.ProfileScreen,
         component: ROUTES.ProfileScreen,
         options: {
-          tabBarLabel: 'Profile',
-
+          tabBarLabel: t('bottomTab.profile'),
           tabBarIcon: ({color, focused}) => (
             <FontAwesome
               name={focused ? 'user' : 'user-o'}
@@ -120,7 +107,8 @@ const BottomTabs = () => {
         },
       },
     ];
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [t, currentLanguage]); // currentLanguage đổi thì reRender lại
   return (
     <BottomTabNavigator.Navigator
       screenOptions={{

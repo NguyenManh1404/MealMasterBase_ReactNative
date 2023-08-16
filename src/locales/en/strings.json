@@ -1,4 +1,11 @@
 {
+  "bottomTab": {
+    "home": "Home",
+    "favorite": "Favorite",
+    "recipe": "Recipe",
+    "notification": "Notification",
+    "profile": "Profile"
+  },
   "onboarding": {
     "hello": "Hello"
   }

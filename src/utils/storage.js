@@ -3,6 +3,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 const STORAGE_KEYS = Object.freeze({
   TOKEN: '@token', // done
   LANGUAGE_KEY: '@language',
+  APP_MODE: '@app_mode',
 });
 
 const storeData = async ({key, value}) => {

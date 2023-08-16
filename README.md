@@ -850,3 +850,5 @@ const Home = () => {
 ```
 
 </details>
+
+# Setup Redux to mange state
