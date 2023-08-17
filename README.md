@@ -1048,3 +1048,83 @@ export default ProfileScreen;
 ```
 
 </details>
+
+<details>
+    <summary><b>Setup Zustand to mange state</b></summary>
+
+# Setup Zustand to mange state
+
+1. Install Zustand;
+
+```
+  yarn add zustand
+  yarn add react-native-async-storage/async-storage
+```
+
+2. Create file and folder for Zustand
+
+![forEachResult](./readmeImg/zustandStruct.png)
+
+3.  Modify these file with follow
+
+```js
+//zustand/createAppConfigSlice.js
+export const createAppConfigSlice = (set, get) => ({
+  number: 0,
+  counterNumber: newNumber => set({number: newNumber}), // keywords cannot be duplicated
+});
+
+///zustand/index.js
+
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {createJSONStorage, persist} from 'zustand/middleware';
+import {createWithEqualityFn} from 'zustand/traditional';
+import {createAppConfigSlice} from './createAppConfigSlice';
+
+export const useStore = createWithEqualityFn(
+  persist(
+    (set, get) => ({
+      ...createAppConfigSlice(set, get),
+    }),
+    {
+      name: 'app-storage',
+      storage: createJSONStorage(() => AsyncStorage),
+    },
+  ),
+);
+```
+
+4. Use Zustands to show and set new sate
+
+```js
+import React from 'react';
+import {SafeAreaView, Text, TouchableOpacity} from 'react-native';
+import {shallow} from 'zustand/shallow';
+import {useStore} from '../../zustand';
+
+const FavoriteScreen = () => {
+  const {number, counterNumber} = useStore(
+    state => ({
+      number: state.number,
+      counterNumber: state.counterNumber,
+    }),
+    shallow,
+  );
+
+  const increaseNumber = () => {
+    counterNumber(number + 1);
+  };
+  return (
+    <SafeAreaView>
+      <Text>FavoriteScree{number}</Text>
+      <TouchableOpacity onPress={increaseNumber}>
+        <Text>Count</Text>
+      </TouchableOpacity>
+    </SafeAreaView>
+  );
+};
+
+export default FavoriteScreen;
+```
+
+</details>
