@@ -883,7 +883,7 @@ const Home = () => {
   yarn add redux-thunk
 ```
 
-2. Create files and folders as shown;
+2. Create files and folders as follow;
 
 - `AppRedux` quản lý app và `AuthRedux` quản lý user
 
@@ -972,6 +972,79 @@ export const store = configureStore({
 });
 export const persistor = persistStore(store);
 
+```
+
+4. Modify `App.js` file, integrate the Redux store and Redux Persist provider:
+
+```js
+import {
+  NavigationContainer,
+  createNavigationContainerRef,
+} from '@react-navigation/native';
+import React from 'react';
+import {Provider} from 'react-redux';
+import {PersistGate} from 'redux-persist/integration/react';
+import {initI18n} from './src/i18n';
+import {MainNavigator} from './src/navigation/stack';
+import {persistor, store} from './src/redux/store';
+initI18n(); //import multiLanguage
+
+const navigationRef = createNavigationContainerRef();
+
+const AppWrapper = () => {
+  return <MainNavigator isAbleToGoHome={true} isAuthenticated={true} />;
+};
+
+const App = () => {
+  return (
+    <NavigationContainer ref={navigationRef}>
+      <Provider store={store}>
+        <PersistGate loading={true} persistor={persistor}>
+          <AppWrapper />
+        </PersistGate>
+      </Provider>
+    </NavigationContainer>
+  );
+};
+
+export default App;
+
+// const styles = StyleSheet.create({});
+```
+
+5. Use redux to show and set new sate
+
+```js
+import React from 'react';
+import {SafeAreaView, Text, TouchableOpacity} from 'react-native';
+import {useDispatch, useSelector} from 'react-redux';
+import {setLanguage} from '../../redux/AppRedux'; // function set State
+
+const ProfileScreen = () => {
+  const user = useSelector(state => state.auth);
+  const app = useSelector(state => state.app);
+
+  const dispatch = useDispatch();
+
+  const changeTheme = () => {
+    dispatch(setLanguage({language: 'vi'}));
+  };
+
+  return (
+    <SafeAreaView>
+      <Text>
+        ProfileScreen{user?.name} {app.language}
+      </Text>
+      <TouchableOpacity onPress={changeTheme}>
+        <Text>Change Language: {app.language}</Text>
+      </TouchableOpacity>
+    </SafeAreaView>
+  );
+};
+
+export default ProfileScreen;
+
+// const styles = StyleSheet.create({});
 ```
 
 </details>
