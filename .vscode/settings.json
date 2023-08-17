@@ -9,5 +9,5 @@
     "source.sortMembers": true
   },
   "editor.tabCompletion": "on",
-  "window.zoomLevel": 0
+  "window.zoomLevel": -1
 }

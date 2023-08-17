@@ -1,8 +1,7 @@
 <details>
     <summary><b>Set Up Environment</b></summary>
+    
 # Setup environment for MAC OS
-
---updated 2/8/2023--
 
 ## Installed Node, Git, Yarn, NPM, Visual Studio.
 
@@ -79,8 +78,11 @@ document: https://reactnative.dev/docs/environment-setup?os=windows&platform=and
    - Theo templay TypeScript: **npx react-native init AwesomeTSProject --template react-native-template-typescript**
 
 6. Chạy thử:
-</details>
 --updated 2/8/2023--
+</details>
+
+<details>
+    <summary><b>Add Splash screen / App logo for APP</b></summary>
 
 # Add Splash screen / App logo for APP
 
@@ -283,6 +285,29 @@ public class SplashActivity extends AppCompatActivity {
 
 --updated 8/8/2023--
 
+</details>
+</details>
+
+# Add quickly command;
+
+Modify **package.json** file;
+
+```json
+
+"scripts":{
+  ///......
+    "android:clean": "cd android && ./gradlew clean",
+    "podInstall": "cd ios && pod install && cd ..",
+    "podNewClear": "cd ios && rm -rf Pods/* && rm -rf Podfile.lock && cd ..",
+    "newclear": "yarn removeCachedFiles && yarn removeCachedMetro && yarn podNewClear && yarn && yarn android:clean && yarn podInstall"
+
+}
+
+```
+
+<details>
+    <summary><b>Add eslint and auto format code when save</b></summary>
+
 # Add eslint and auto format code when save;
 
 1. Modified file **MealMaster/.eslintrc.js**
@@ -341,22 +366,8 @@ module.exports = {
 
 </details>
 
-# Add quickly command;
-
-Modify **package.json** file;
-
-```json
-
-"scripts":{
-  ///......
-    "android:clean": "cd android && ./gradlew clean",
-    "podInstall": "cd ios && pod install && cd ..",
-    "podNewClear": "cd ios && rm -rf Pods/* && rm -rf Podfile.lock && cd ..",
-    "newclear": "yarn removeCachedFiles && yarn removeCachedMetro && yarn podNewClear && yarn && yarn android:clean && yarn podInstall"
-
-}
-
-```
+<details>
+    <summary><b> Add Vector ICON and Component Paper</b></summary>
 
 # Add Vector ICON and Component Paper;
 
@@ -432,6 +443,11 @@ project.ext.vectoricons = [
 apply from: file("../../node_modules/react-native-vector-icons/fonts.gradle")
 apply from: "../../node_modules/react-native/react.gradle"
 ```
+
+</details>
+
+<details>
+    <summary><b> Add Navigation for Project</b></summary>
 
 # Add Navigation for Project;
 
@@ -719,6 +735,8 @@ export default App;
 
 </details>
 
+</details>
+
 <details>
     <summary><b>Add Multi Language</b></summary>
 
@@ -851,4 +869,109 @@ const Home = () => {
 
 </details>
 
+<details>
+    <summary><b>Setup Redux to mange state</b></summary>
+
 # Setup Redux to mange state
+
+1. Install these libraries:
+
+```js
+  yarn add @reduxjs/toolkit
+  yarn add react-redux
+  yarn add redux-persist
+  yarn add redux-thunk
+```
+
+2. Create files and folders as shown;
+
+- `AppRedux` quản lý app và `AuthRedux` quản lý user
+
+![forEachResult](./readmeImg/reduxStruct.png)
+
+3. Modify these file with follow
+
+```js
+///AppRedux/index.js
+
+import {createSlice} from '@reduxjs/toolkit';
+
+const initialState = {
+  language: 'en',
+};
+const appSlice = createSlice({
+  name: 'app',
+  initialState,
+  reducers: {
+    setLanguage: (state, action) => action.payload,
+    setDefault: () => initialState,
+  },
+});
+
+export const {setLanguage, setDefault} = appSlice.actions;
+export default appSlice.reducer;
+
+
+//AuthRedux/index.js
+
+import {createSlice} from '@reduxjs/toolkit';
+const authSlice = createSlice({
+  name: 'auth',
+  initialState: {
+    name: 'Nguyen Hung Manh',
+  },
+  reducers: {
+    setUser: (state, action) => action.payload,
+    clearUser: () => null,
+  },
+});
+
+export const {setUser, clearUser} = authSlice.actions;
+export default authSlice.reducer;
+
+//redux/reducers.js
+
+import {combineReducers} from '@reduxjs/toolkit';
+import appReducer from './AppRedux';
+import authReducer from './AuthRedux';
+
+const rootReducer = combineReducers({
+  app: appReducer,
+  auth: authReducer,
+});
+
+export default rootReducer;
+
+
+//redux/store.js
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {combineReducers, configureStore} from '@reduxjs/toolkit';
+import {persistReducer, persistStore} from 'redux-persist';
+import thunk from 'redux-thunk';
+import appReducer from './AppRedux';
+import authReducer from './AuthRedux';
+
+const persistConfig = {
+  key: 'root',
+  storage: AsyncStorage,
+  whitelist: ['app', 'auth'], // lưu lại trạng thái
+  blacklist: [], // khong luu trang thái
+};
+
+const reducers = combineReducers({
+  app: appReducer,
+  auth: authReducer,
+});
+
+const persistedReducer = persistReducer(persistConfig, reducers);
+
+export const store = configureStore({
+  reducer: persistedReducer,
+  devTools: true,
+  middleware: [thunk],// fix waring register
+});
+export const persistor = persistStore(store);
+
+```
+
+</details>
