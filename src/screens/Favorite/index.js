@@ -1,6 +1,8 @@
 import React from 'react';
-import {SafeAreaView, Text, TouchableOpacity} from 'react-native';
+import {TouchableOpacity} from 'react-native';
 import {shallow} from 'zustand/shallow';
+import Text from '../../components/Text';
+import WSafeAreaView from '../../components/WSafeAreaView';
 import {useStore} from '../../zustand';
 
 const FavoriteScreen = () => {
@@ -16,12 +18,12 @@ const FavoriteScreen = () => {
     counterNumber(number + 1);
   };
   return (
-    <SafeAreaView>
+    <WSafeAreaView>
       <Text>FavoriteScree{number}</Text>
       <TouchableOpacity onPress={increaseNumber}>
         <Text>Count</Text>
       </TouchableOpacity>
-    </SafeAreaView>
+    </WSafeAreaView>
   );
 };
 

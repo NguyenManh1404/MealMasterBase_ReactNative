@@ -1,14 +1,15 @@
 import React from 'react';
-import {SafeAreaView, StyleSheet, Text} from 'react-native';
+import Text from '../../components/Text';
+import WSafeAreaView from '../../components/WSafeAreaView';
 
 const RecipeScreen = () => {
   return (
-    <SafeAreaView>
+    <WSafeAreaView>
       <Text>RecipeScreen</Text>
-    </SafeAreaView>
+    </WSafeAreaView>
   );
 };
 
 export default RecipeScreen;
 
-const styles = StyleSheet.create({});
+// const styles = StyleSheet.create({});

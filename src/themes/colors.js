@@ -8,5 +8,6 @@ const APP_COLORS = {
   neturalBlack: '#161724',
   error: 'red',
   greyL2: '#857E7F',
+  black: '#000',
 };
 export {APP_COLORS};

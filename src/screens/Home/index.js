@@ -2,7 +2,7 @@ import {useNavigation} from '@react-navigation/core';
 import i18next from 'i18next';
 import React, {useState} from 'react';
 import {useTranslation} from 'react-i18next';
-import {Image, SafeAreaView, ScrollView, Text} from 'react-native';
+import {Image, ScrollView, TouchableOpacity} from 'react-native';
 import {
   Avatar,
   Banner,
@@ -15,6 +15,9 @@ import {
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import {useDispatch, useSelector} from 'react-redux';
 import LocalImage from '../../components/LocalImage';
+import Text from '../../components/Text';
+import WSafeAreaView from '../../components/WSafeAreaView';
+import {useAppMode} from '../../hooks/useAppMode';
 import {setLanguage as setLanguageRedux} from '../../redux/AppRedux';
 import {clearUser, setUser} from '../../redux/AuthRedux';
 
@@ -24,6 +27,7 @@ const HomeScreen = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const user = useSelector(state => state.auth);
   const app = useSelector(state => state.app);
+  const {isLightMode, onSelectAppMode} = useAppMode();
 
   const dispatch = useDispatch();
 
@@ -49,18 +53,22 @@ const HomeScreen = () => {
 
   const LeftContent = props => <Avatar.Icon {...props} icon="folder" />;
   return (
-    <SafeAreaView>
+    <WSafeAreaView>
       <ScrollView>
         <Searchbar
           placeholder="Search"
           onChangeText={onChangeSearch}
           value={searchQuery}
         />
-        <Text>HomeScreen {user?.name}</Text>
+        <Text type="bold-25">HomeScreen {user?.name}</Text>
         <Text>{app.language}</Text>
         <Text>{t('onboarding.hello')}</Text>
 
-        <Icon.Button name="user" onPress={changeUser} solid>
+        <Icon.Button
+          name="user"
+          onPress={changeUser}
+          solid
+          theme={{dark: true}}>
           Change User
         </Icon.Button>
 
@@ -72,6 +80,10 @@ const HomeScreen = () => {
           Change Language
         </Icon.Button>
 
+        <TouchableOpacity onPress={onSelectAppMode}>
+          <Text>Change Themes: {isLightMode ? 'light' : 'Dark'}</Text>
+        </TouchableOpacity>
+
         <Avatar.Icon size={24} icon="folder" color="yellow" />
         <Icon name="rocket" size={30} color="#900" solid />
         <Button
@@ -82,6 +94,7 @@ const HomeScreen = () => {
         </Button>
 
         <Banner
+          theme={{dark: true}}
           visible={visible}
           actions={[
             {
@@ -104,6 +117,7 @@ const HomeScreen = () => {
               }}
             />
           )}>
+          <Text variant="titleLarge">Card title</Text>
           There was a problem processing a transaction on your credit card.
         </Banner>
         <LocalImage imageKey={'logo'} />
@@ -129,7 +143,7 @@ const HomeScreen = () => {
           <IconButton icon="camera" selected size={24} onPress={() => {}} />
         </Tooltip>
       </ScrollView>
-    </SafeAreaView>
+    </WSafeAreaView>
   );
 };
 

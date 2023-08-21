@@ -5,6 +5,7 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useTranslation} from 'react-i18next';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import {useAppMode} from '../../hooks/useAppMode';
 import {APP_COLORS} from '../../themes/colors';
 import {LANGUAGE_KEY} from '../../utils/constant';
 import {ROUTES, ROUTE_NAMES} from '../routes';
@@ -21,6 +22,8 @@ export const PARENT_BOTTOM_TAB_SCREENS = [
 
 const BottomTabs = () => {
   const {t} = useTranslation();
+
+  const {isLightMode} = useAppMode();
   const currentLanguage = AsyncStorage.getItem(LANGUAGE_KEY);
   const BOTTOM_TABS = useMemo(() => {
     return [
@@ -113,10 +116,13 @@ const BottomTabs = () => {
     <BottomTabNavigator.Navigator
       screenOptions={{
         tabBarActiveTintColor: APP_COLORS.primary,
-        tabBarInactiveTintColor: APP_COLORS.greyL2,
+        tabBarInactiveTintColor: !isLightMode
+          ? APP_COLORS.white
+          : APP_COLORS.greyL2,
         tabBarIconStyle: {width: 4, height: 4},
-
-        tabBarStyle: {},
+        tabBarStyle: {
+          backgroundColor: isLightMode ? APP_COLORS.white : APP_COLORS.black,
+        },
       }}
       initialRouteName={ROUTE_NAMES.HomeScreen}
       tabBarActiveTintColor={APP_COLORS.primary}>
