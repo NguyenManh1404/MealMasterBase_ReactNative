@@ -8,5 +8,21 @@
   },
   "onboarding": {
     "hello": "Hello"
+  },
+  "authentication": {
+    "login": "Login",
+    "emailAddress": "Email Address",
+    "password": "Password",
+    "forgotPassword": "Forgot password",
+    "doNotHaveAccount": "Don’t have an account",
+    "signUp": "Sign Up",
+    "signInWith": "Sign in with",
+    "yourEmailAddress": "Your email address"
+  },
+  "validation": {
+    "emailInvalid": "Email Invalid",
+    "emailIsRequire": "Email is require",
+    "password6-20": "Password from 6-20 characters",
+    "passwordIsRequire": "Password is require"
   }
 }

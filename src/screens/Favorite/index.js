@@ -1,8 +1,8 @@
 import React from 'react';
 import {TouchableOpacity} from 'react-native';
 import {shallow} from 'zustand/shallow';
+import WSafeAreaView from '../../components/SafeAreaContainer';
 import Text from '../../components/Text';
-import WSafeAreaView from '../../components/WSafeAreaView';
 import {useStore} from '../../zustand';
 
 const FavoriteScreen = () => {

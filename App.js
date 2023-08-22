@@ -4,7 +4,7 @@ import {
 } from '@react-navigation/native';
 import React from 'react';
 import {StatusBar} from 'react-native';
-import {Provider} from 'react-redux';
+import {Provider, useSelector} from 'react-redux';
 import {PersistGate} from 'redux-persist/integration/react';
 import {useAppMode} from './src/hooks/useAppMode';
 import {initI18n} from './src/i18n';
@@ -19,6 +19,13 @@ const navigationRef = createNavigationContainerRef();
 const AppWrapper = () => {
   const {isLightMode} = useAppMode();
   StatusBar.setBarStyle(isLightMode ? 'default' : 'light-content');
+
+  const isAbleToGoHome = useSelector(state => state.app.isAbleToGoHome);
+  console.log(
+    '🚀 ~ file: App.js:24 ~ AppWrapper ~ isAbleToGoHome:',
+    isAbleToGoHome,
+  );
+
   const theme = {
     ...MD3LightTheme, // or MD3DarkTheme
     roundness: 2,
@@ -34,7 +41,7 @@ const AppWrapper = () => {
   };
   return (
     <PaperProvider theme={theme}>
-      <MainNavigator isAbleToGoHome={true} isAuthenticated={true} />
+      <MainNavigator isAbleToGoHome={isAbleToGoHome} />
     </PaperProvider>
   );
 };

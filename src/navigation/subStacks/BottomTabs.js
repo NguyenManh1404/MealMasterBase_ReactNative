@@ -7,7 +7,7 @@ import {useTranslation} from 'react-i18next';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useAppMode} from '../../hooks/useAppMode';
 import {APP_COLORS} from '../../themes/colors';
-import {LANGUAGE_KEY} from '../../utils/constant';
+import {LANGUAGE_KEY} from '../../utils/constants';
 import {ROUTES, ROUTE_NAMES} from '../routes';
 
 const BottomTabNavigator = createBottomTabNavigator();

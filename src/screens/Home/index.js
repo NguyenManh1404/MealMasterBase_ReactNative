@@ -1,4 +1,3 @@
-import {useNavigation} from '@react-navigation/core';
 import i18next from 'i18next';
 import React, {useState} from 'react';
 import {useTranslation} from 'react-i18next';
@@ -15,18 +14,21 @@ import {
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import {useDispatch, useSelector} from 'react-redux';
 import LocalImage from '../../components/LocalImage';
+import WSafeAreaView from '../../components/SafeAreaContainer';
 import Text from '../../components/Text';
-import WSafeAreaView from '../../components/WSafeAreaView';
 import {useAppMode} from '../../hooks/useAppMode';
-import {setLanguage as setLanguageRedux} from '../../redux/AppRedux';
+import {
+  setIsAbleToGoHome,
+  setLanguage as setLanguageRedux,
+} from '../../redux/AppRedux';
 import {clearUser, setUser} from '../../redux/AuthRedux';
 
 const HomeScreen = () => {
-  const {navigate} = useNavigation();
   const [visible, setVisible] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const user = useSelector(state => state.auth);
   const app = useSelector(state => state.app);
+  const isAbleToGoHome = useSelector(state => state.app.isAbleToGoHome);
   const {isLightMode, onSelectAppMode} = useAppMode();
 
   const dispatch = useDispatch();
@@ -43,7 +45,7 @@ const HomeScreen = () => {
 
   const updateLanguage = async selectedLanguage => {
     if (selectedLanguage) {
-      await dispatch(setLanguageRedux({language: language}));
+      await dispatch(setLanguageRedux(language));
       setLanguage(language === 'vi' ? 'en' : 'vi');
       i18next.changeLanguage(language);
     }
@@ -88,9 +90,9 @@ const HomeScreen = () => {
         <Icon name="rocket" size={30} color="#900" solid />
         <Button
           onPress={() => {
-            navigate('Details');
+            dispatch(setIsAbleToGoHome(!isAbleToGoHome));
           }}>
-          <Text>Navigate</Text>
+          <Text>Logout</Text>
         </Button>
 
         <Banner

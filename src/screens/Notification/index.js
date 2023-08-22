@@ -1,6 +1,6 @@
 import React from 'react';
+import WSafeAreaView from '../../components/SafeAreaContainer';
 import Text from '../../components/Text';
-import WSafeAreaView from '../../components/WSafeAreaView';
 
 const NotificationScreen = () => {
   return (

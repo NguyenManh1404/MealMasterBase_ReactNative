@@ -3,7 +3,7 @@ import i18n from 'i18next';
 import {initReactI18next} from 'react-i18next';
 import {NativeModules} from 'react-native';
 import locales from '../locales'; // path to your locales folder
-import {DEFAULT_LANGUAGE, IS_IOS} from '../utils/constant';
+import {DEFAULT_LANGUAGE, IS_IOS} from '../utils/constants';
 
 const LANGUAGE_KEY = '@language';
 const SUPPORTED_LANGUAGES = ['en', 'vi'];

@@ -1,8 +1,8 @@
 import React from 'react';
 import {TouchableOpacity} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
+import WSafeAreaView from '../../components/SafeAreaContainer';
 import Text from '../../components/Text';
-import WSafeAreaView from '../../components/WSafeAreaView';
 import {useAppMode} from '../../hooks/useAppMode';
 import {setLanguage} from '../../redux/AppRedux';
 
@@ -13,7 +13,7 @@ const ProfileScreen = () => {
   const dispatch = useDispatch();
 
   const changeTheme = () => {
-    dispatch(setLanguage({language: 'vi'}));
+    dispatch(setLanguage('vi'));
   };
 
   const {isLightMode, onSelectAppMode} = useAppMode();

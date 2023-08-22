@@ -8,5 +8,21 @@
   },
   "onboarding": {
     "hello": "Xin chào"
+  },
+  "authentication": {
+    "login": "Đăng Nhập",
+    "emailAddress": "Địa chi Email",
+    "password": "Mật khẩu",
+    "forgotPassword": "Quên mật khẩu ?",
+    "doNotHaveAccount": "Chưa có tài khoản",
+    "signUp": "Đăng ký",
+    "signInWith": "Đăng nhập với",
+    "yourEmailAddress": "Địa chỉ email của bạn"
+  },
+  "validation": {
+    "emailInvalid": "Địa chỉ email sai đinh dạng",
+    "emailIsRequire": "Nhập địa chỉ email",
+    "password6-20": "Mật khẩu yêu cầu từ 6 đến 20 ký tự",
+    "passwordIsRequire": "Nhập mật khẩu của bạn"
   }
 }

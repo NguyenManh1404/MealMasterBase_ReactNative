@@ -32,11 +32,13 @@ const MainNavigator = ({isAbleToGoHome}) => {
           headerShown: false,
         },
       },
-      {
-        name: ROUTE_NAMES.Login,
-        component: ROUTES.Login,
-        options: {},
-      },
+      // {
+      //   name: ROUTE_NAMES.Login,
+      //   component: ROUTES.Login,
+      //   options: {
+      //     headerShown: false || isAbleToGoHome,
+      //   },
+      // },
     ];
   }, []);
 
@@ -50,16 +52,24 @@ const MainNavigator = ({isAbleToGoHome}) => {
     <Stack.Navigator
       initialRouteName={initialRouteName}
       screenOptions={SCREEN_OPTION}>
-      {STACKS.map(({component, name, options}, index) => {
-        return (
-          <Stack.Screen
-            key={index}
-            name={name}
-            component={component}
-            options={options}
-          />
-        );
-      })}
+      {isAbleToGoHome ? (
+        STACKS.map(({component, name, options}, index) => {
+          return (
+            <Stack.Screen
+              key={index}
+              name={name}
+              component={component}
+              options={options}
+            />
+          );
+        })
+      ) : (
+        <Stack.Screen
+          name={ROUTE_NAMES.Login}
+          component={ROUTES.Login}
+          options={{headerShown: false}}
+        />
+      )}
     </Stack.Navigator>
   );
 };

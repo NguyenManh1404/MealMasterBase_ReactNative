@@ -9,5 +9,6 @@ const APP_COLORS = {
   error: 'red',
   greyL2: '#857E7F',
   black: '#000',
+  gray: '#808080',
 };
 export {APP_COLORS};
