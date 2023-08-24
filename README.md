@@ -1276,4 +1276,44 @@ export {useAuthentication};
 
 ## Android Environments
 
+1. Modify `android/app/build.gradle`
+
+```js
+    implementation "com.facebook.react:react-native:+"  // From node_modules
+
+
+    implementation 'com.facebook.android:facebook-android-sdk:latest.release' //here
+
+    implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0"
+
+    debugImplementation("com.facebook.flipper:flipper:${FLIPPER_VERSION}") {
+```
+
+2. `android/app/src/main/res/values/strings.xml`
+
+```js
+<resources>
+  <string name="app_name">MealMaster</string>{' '}
+  <string name="app_name">MealMaster</string>
+  <string name="facebook_app_id">14528772190xxxx</string>
+  <string name="facebook_client_token">e51f17b6c394f7ac0bffba8bc9XXXXX</string>
+</resources>
+```
+
+3. Modify `android/app/src/main/AndroidManifest.xml`
+
+```js
+      android:allowBackup="false"
+      android:theme="@style/AppTheme">
+
+    <!-- sign in with facebook -->
+    <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id"/>
+    <meta-data android:name="com.facebook.sdk.ClientToken" android:value="@string/facebook_client_token"/>
+    <!-- sign in with facebook -->
+
+    <activity android:name=".SplashActivity" android:exported="true" android:screenOrientation="portrait">
+      <intent-filter>
+        <action android:name="android.intent.action.MAIN"/>
+```
+
 </details>
