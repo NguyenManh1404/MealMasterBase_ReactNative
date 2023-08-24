@@ -1128,3 +1128,12 @@ export default FavoriteScreen;
 ```
 
 </details>
+
+<details>
+    <summary><b>Login with Facebook</b></summary>
+
+1. `sed "s/your_api_key_here/your_actual_api_key/g" .env.example > .env`: Send .env.example file to env
+
+2.
+
+</details>

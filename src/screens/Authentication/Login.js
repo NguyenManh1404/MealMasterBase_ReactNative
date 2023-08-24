@@ -13,6 +13,7 @@ import {
   Text,
 } from '../../components';
 import Input from '../../components/Input';
+import {useAuthentication} from '../../hooks/useAuthentication';
 import {setIsAbleToGoHome} from '../../redux/AppRedux';
 import {APP_COLORS} from '../../themes/colors';
 import {SCREEN_WIDTH} from '../../utils/constants';
@@ -23,7 +24,7 @@ const Login = () => {
   const dispatch = useDispatch();
   const isAbleToGoHome = useSelector(state => state.app.isAbleToGoHome);
 
-  // const {loginByEmail, loginFacebook, loginGoogle} = useAuthentication();
+  const {loginFacebook} = useAuthentication();
 
   const formik = useFormik({
     initialValues: {
@@ -116,7 +117,7 @@ const Login = () => {
               <View style={styles.viewButton}>
                 <TouchableOpacity
                   style={styles.buttonSocial}
-                  onPress={() => {}}>
+                  onPress={loginFacebook}>
                   <Icon
                     name="facebook"
                     size={30}

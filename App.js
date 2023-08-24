@@ -20,11 +20,7 @@ const AppWrapper = () => {
   const {isLightMode} = useAppMode();
   StatusBar.setBarStyle(isLightMode ? 'default' : 'light-content');
 
-  const isAbleToGoHome = useSelector(state => state.app.isAbleToGoHome);
-  console.log(
-    '🚀 ~ file: App.js:24 ~ AppWrapper ~ isAbleToGoHome:',
-    isAbleToGoHome,
-  );
+  const userInfo = useSelector(state => state.auth.userInfo);
 
   const theme = {
     ...MD3LightTheme, // or MD3DarkTheme
@@ -41,7 +37,7 @@ const AppWrapper = () => {
   };
   return (
     <PaperProvider theme={theme}>
-      <MainNavigator isAbleToGoHome={isAbleToGoHome} />
+      <MainNavigator isAbleToGoHome={userInfo} />
     </PaperProvider>
   );
 };

@@ -17,10 +17,7 @@ import LocalImage from '../../components/LocalImage';
 import WSafeAreaView from '../../components/SafeAreaContainer';
 import Text from '../../components/Text';
 import {useAppMode} from '../../hooks/useAppMode';
-import {
-  setIsAbleToGoHome,
-  setLanguage as setLanguageRedux,
-} from '../../redux/AppRedux';
+import {setLanguage as setLanguageRedux} from '../../redux/AppRedux';
 import {clearUser, setUser} from '../../redux/AuthRedux';
 
 const HomeScreen = () => {
@@ -28,7 +25,7 @@ const HomeScreen = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const user = useSelector(state => state.auth);
   const app = useSelector(state => state.app);
-  const isAbleToGoHome = useSelector(state => state.app.isAbleToGoHome);
+  const userInfo = useSelector(state => state.auth.userInfo);
   const {isLightMode, onSelectAppMode} = useAppMode();
 
   const dispatch = useDispatch();
@@ -62,7 +59,10 @@ const HomeScreen = () => {
           onChangeText={onChangeSearch}
           value={searchQuery}
         />
-        <Text type="bold-25">HomeScreen {user?.name}</Text>
+        <Text type="bold-25">
+          HomeScreen {user?.name}
+          {userInfo?.firstName}
+        </Text>
         <Text>{app.language}</Text>
         <Text>{t('onboarding.hello')}</Text>
 
@@ -90,7 +90,7 @@ const HomeScreen = () => {
         <Icon name="rocket" size={30} color="#900" solid />
         <Button
           onPress={() => {
-            dispatch(setIsAbleToGoHome(!isAbleToGoHome));
+            dispatch(setUser(null));
           }}>
           <Text>Logout</Text>
         </Button>
@@ -111,7 +111,7 @@ const HomeScreen = () => {
           icon={({size}) => (
             <Image
               source={{
-                uri: 'https://avatars3.githubusercontent.com/u/17571969?s=400&v=4',
+                uri: userInfo?.avatar,
               }}
               style={{
                 width: size,
