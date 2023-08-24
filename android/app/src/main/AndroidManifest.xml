@@ -11,6 +11,11 @@
       android:allowBackup="false"
       android:theme="@style/AppTheme">
 
+    <!-- sign in with facebook -->
+    <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id"/>
+    <meta-data android:name="com.facebook.sdk.ClientToken" android:value="@string/facebook_client_token"/>
+    <!-- sign in with facebook -->
+
     <activity android:name=".SplashActivity" android:exported="true" android:screenOrientation="portrait">
       <intent-filter>
         <action android:name="android.intent.action.MAIN"/>

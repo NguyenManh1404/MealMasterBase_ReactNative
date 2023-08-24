@@ -6,7 +6,6 @@ const useAuthentication = () => {
   const dispatch = useDispatch();
   //social handlers
   const loginFacebook = async () => {
-    console.log('vao day');
     try {
       LoginManager.logOut();
 
@@ -20,11 +19,6 @@ const useAuthentication = () => {
           const tokenResponse = await AccessToken.getCurrentAccessToken();
           if (tokenResponse) {
             Profile.getCurrentProfile().then(function (currentProfile) {
-              console.log(
-                '🚀 ~ file: useAuthentication.js:21 ~ currentProfile:',
-                currentProfile,
-              );
-
               dispatch(
                 setUser({
                   firstName: currentProfile.firstName,
@@ -34,11 +28,6 @@ const useAuthentication = () => {
                   email: currentProfile.email,
                 }),
               );
-              //   updateUserInfo({
-              //     firstName: currentProfile.firstName,
-              //     lastName: currentProfile.lastName,
-              //     avatar: currentProfile.imageURL,
-              //   });
             });
             // await loginFacebookMutation(tokenResponse.accessToken);
           }

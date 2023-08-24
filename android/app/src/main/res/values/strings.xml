@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">MealMaster</string>
+    <string name="facebook_app_id">145287721907504</string>
+    <string name="facebook_client_token">e51f17b6c394f7ac0bffba8bc93e2944</string>
 </resources>

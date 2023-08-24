@@ -1134,6 +1134,146 @@ export default FavoriteScreen;
 
 1. `sed "s/your_api_key_here/your_actual_api_key/g" .env.example > .env`: Send .env.example file to env
 
-2.
+# Quickly Login with Facebook
+
+## Prepare Environments
+
+1. Add Libraries
+
+```
+yarn add react-native-fbsdk-next  (10.1.0)
+
+```
+
+2. Go to `https://developers.facebook.com/` to create your own facebook app by following these steps below:
+
+![forEachResult](./readmeImg/addFacebook1.png)
+
+![forEachResult](./readmeImg/addFacebook2.png)
+
+![forEachResult](./readmeImg/addFacebook3.png)
+
+- Go to Products/Add Product and and choose Facebook Login product.
+
+![forEachResult](./readmeImg/addFacebook4.png)
+
+- We will set up for both platform here (Android & IOS)
+
+![forEachResult](./readmeImg/addFacebook5.png)
+
+## IOS Environments
+
+1. Add Bundle ID
+
+![forEachResult](./readmeImg/addFacebook6.png)
+
+2. Modify `ios/MealMaster/Info.plist` to add key `FacebookAppID`, `FacebookClientToken` and `FacebookDisplayName`
+
+```javascript
+<string>1.0</string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
+
+	<key>FacebookAppID</key>
+    <string>145287721907504</string>
+	 <key>FacebookClientToken</key>
+  	<string>e51f17b6c394f7ac0bffba8bc93e2944</string>
+    <key>FacebookDisplayName</key>
+    <string>mastermeal</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>fb145287721907504</string>
+			</array>
+		</dict>
+	</array>
+	<key>CFBundleVersion</key>
+	<string>1</string>
+	<key>LSRequiresIPhoneOS</key>
+```
+
+3. Modify `ios/MealMaster/AppDelegate.mm`
+
+```mm
+#import <React/RCTAppSetupUtils.h>
+
+#import <FBSDKCoreKit/FBSDKCoreKit.h>  // here
+
+#if RCT_NEW_ARCH_ENABLED
+#import <React/CoreModulesPlugins.h>
+#import <React/RCTCxxBridgeDelegate.h>
+	@@ -31,9 +33,12 @@ @implementation AppDelegate
+
+- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
+{
+  [[FBSDKApplicationDelegate sharedInstance] initializeSDK]; // here
+  RCTAppSetupPrepareApp(application);
+
+  RCTBridge *bridge = [[RCTBridge alloc] initWithDelegate:self launchOptions:launchOptions];
+  [[FBSDKApplicationDelegate sharedInstance] application:application
+                        didFinishLaunchingWithOptions:launchOptions];// here
+
+#if RCT_NEW_ARCH_ENABLED
+  _contextContainer = std::make_shared<facebook::react::ContextContainer const>();
+
+```
+
+![forEachResult](./readmeImg/addFacebook7.png)
+
+5. Use in project `useAuthentication`
+
+```js
+import {AccessToken, LoginManager, Profile} from 'react-native-fbsdk-next';
+import {useDispatch} from 'react-redux';
+import {setUser} from '../redux/AuthRedux';
+
+const useAuthentication = () => {
+  const dispatch = useDispatch();
+  //social handlers
+  const loginFacebook = async () => {
+    console.log('vao day');
+    try {
+      LoginManager.logOut();
+
+      const result = await LoginManager.logInWithPermissions([
+        'public_profile',
+        'email',
+      ]);
+      if (result) {
+        if (result.isCancelled) {
+        } else {
+          const tokenResponse = await AccessToken.getCurrentAccessToken();
+          if (tokenResponse) {
+            Profile.getCurrentProfile().then(function (currentProfile) {
+              dispatch(
+                setUser({
+                  firstName: currentProfile.firstName,
+                  facebookId: currentProfile.userID,
+                  lastName: currentProfile.lastName,
+                  avatar: currentProfile.imageURL,
+                  email: currentProfile.email,
+                }),
+              );
+            });
+          }
+        }
+      }
+    } catch (error) {}
+  };
+  return {
+    loginFacebook,
+  };
+};
+
+export {useAuthentication};
+```
+
+6. Rebuild and check again
+
+## Android Environments
 
 </details>
