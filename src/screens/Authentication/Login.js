@@ -24,7 +24,7 @@ const Login = () => {
   const dispatch = useDispatch();
   const isAbleToGoHome = useSelector(state => state.app.isAbleToGoHome);
 
-  const {loginFacebook} = useAuthentication();
+  const {loginFacebook, loginGoogle} = useAuthentication();
 
   const formik = useFormik({
     initialValues: {
@@ -146,7 +146,7 @@ const Login = () => {
                 </TouchableOpacity>
                 <TouchableOpacity
                   style={styles.buttonSocial}
-                  onPress={() => {}}>
+                  onPress={loginGoogle}>
                   <Icon
                     name="google"
                     size={30}

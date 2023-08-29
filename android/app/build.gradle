@@ -2,6 +2,8 @@ apply plugin: "com.android.application"
 
 apply from: project(':react-native-config').projectDir.getPath() + "/dotenv.gradle" // use with react native config
 
+apply plugin: 'com.google.gms.google-services' // <--- this should be the last line
+
 import com.android.build.OutputFile
 import org.apache.tools.ant.taskdefs.condition.Os
 
@@ -265,6 +267,9 @@ dependencies {
     implementation 'com.facebook.android:facebook-android-sdk:latest.release'
 
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0"
+
+    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.0.0' // <-- Login with facebook
+
 
     debugImplementation("com.facebook.flipper:flipper:${FLIPPER_VERSION}") {
         exclude group:'com.facebook.fbjni'

@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "785576828659",
+    "project_id": "mealmaster-967cd",
+    "storage_bucket": "mealmaster-967cd.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:785576828659:android:9bc19d688aee7d55e82186",
+        "android_client_info": {
+          "package_name": "com.mealmaster"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "785576828659-231gojou2mo0isvhpnh24p0qpoe6k2bj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDm_OleJZVXznyI35ypWXKIeAhHSwXhOok"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "785576828659-231gojou2mo0isvhpnh24p0qpoe6k2bj.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "785576828659-j8ng15fk4ek7iae8q9oc5bkaddrhk9rt.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "org.reactjs.native.example.MealMaster"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

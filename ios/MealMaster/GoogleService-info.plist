@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>785576828659-j8ng15fk4ek7iae8q9oc5bkaddrhk9rt.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.785576828659-j8ng15fk4ek7iae8q9oc5bkaddrhk9rt</string>
+	<key>API_KEY</key>
+	<string>AIzaSyCswxUdL8s3iAFSm9c3PJFaqEMga2rFHCw</string>
+	<key>GCM_SENDER_ID</key>
+	<string>785576828659</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>org.reactjs.native.example.MealMaster</string>
+	<key>PROJECT_ID</key>
+	<string>mealmaster-967cd</string>
+	<key>STORAGE_BUCKET</key>
+	<string>mealmaster-967cd.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:785576828659:ios:bb1c0f895d7704efe82186</string>
+</dict>
+</plist>

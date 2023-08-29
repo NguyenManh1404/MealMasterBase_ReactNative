@@ -1317,3 +1317,232 @@ export {useAuthentication};
 ```
 
 </details>
+
+<details>
+    <summary><b>Login With Google</b></summary>
+
+# Login With Google
+
+1. Install the library
+
+```
+yarn add @react-native-google-signin/google-signin (latest version: 8.0.0)
+
+```
+
+2. Go to https://console.firebase.google.com/ to create your own firebase app by following these steps below:
+
+![forEachResult](./readmeImg/LoginGoogle1.png)
+
+![forEachResult](./readmeImg/LoginGoogle2.png)
+
+- After creating project successfully, we will see this:
+
+![forEachResult](./readmeImg/LoginGoogle3.png)
+
+- Anble here:
+
+![forEachResult](./readmeImg/LoginGoogle10.png)
+
+- Let's configure for 2 specific platforms: (IOS & Android)
+
+## IOS Environment
+
+1. Fill in bundle id and app name and download `GoogleService-Info.plist`
+
+![forEachResult](./readmeImg/LoginGoogle4.png)
+
+2. Drag your `GoogleService-Info.plist` to `MealMaster/ios/MealMaster` root folder. Please select your scheme and check copy if needed
+
+![forEachResult](./readmeImg/LoginGoogle5.png)
+
+3. Modify file `MealMaster/ios/MealMaster/Info.plist`
+
+```plist
+// GOOGLE_REVERSED_CLIENT_ID is found at <key>REVERSED_CLIENT_ID</key>
+// in your GoogleService-Info.plist
+
+GOOGLE_REVERSED_CLIENT_ID=com.googleusercontent.apps.523123115560-8nf3cpu7ltdod5l4dlq5sepsks500hhe
+
+<key>CFBundleURLTypes</key>
+	<array>
+		...
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>$(GOOGLE_REVERSED_CLIENT_ID)</string>
+			</array>
+		</dict>
+	</array>
+
+```
+
+![forEachResult](./readmeImg/LoginGoogle6.png)
+
+4. Modify file `MealMaster/ios/MealMaster/AppDelegate.mm`
+
+```mm
+
+#import <RNGoogleSignin/RNGoogleSignin.h>
+
+......
+
+- (BOOL)application:(UIApplication *)application
+            openURL:(NSURL *)url
+            options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options {
+
+  ...
+
+  [RNGoogleSignin application:application openURL:url options:options];
+
+  return YES;
+}
+
+```
+
+![forEachResult](./readmeImg/LoginGoogle7.png)
+
+## Android Environomemt
+
+1. Fill in bundle id in(`MealMaster/android/app/src/main/AndroidManifest.xml`), app name, SHA-1 (required for google sign in) and download `google-services.json` file.
+
+![forEachResult](./readmeImg/LoginGoogle8.png)
+
+2. Drag your `google-services.json` to `MealMaster/android/app/google-services.json` root folder.
+
+![forEachResult](./readmeImg/LoginGoogle9.png)
+
+3. Add SHA-1 fingerprint
+
+- To get the SHA1:
+
+  - From your project root, `cd android && ./gradlew signingReport`.
+  - Scroll to the top of output, see the fingerprints. Debug fingerprint is used in dev, release fingerprint is used in production.
+
+- To add the SHA1:
+  - Sign in to Firebase and open your project.
+  - Click the Settings icon and select Project settings.
+  - In the Your apps card, select the package name of the app you need a to add SHA1 to.
+  - Click "Add fingerprint".
+    ![forEachResult](./readmeImg/LoginGoogle11.png)
+
+4. Re-download the `google-services.json` file and put it into your project at `android/app` if you modify SHA1
+
+5. Modify `android/build.gradle`
+
+```gradle
+buildscript {
+    ext {
+        buildToolsVersion = "27.0.3"
+        minSdkVersion = 16
+        compileSdkVersion = 27
+        targetSdkVersion = 26
+        supportLibVersion = "27.1.1"
+        googlePlayServicesAuthVersion = "19.2.0" // <--- use this version or newer
+    }
+...
+    dependencies {
+        classpath 'com.android.tools.build:gradle:4.2.1' // <--- use this version or newer
+        classpath 'com.google.gms:google-services:4.3.10' // <--- use this version or newer
+    }
+...
+allprojects {
+    repositories {
+        mavenLocal()
+        google() // <--- make sure this is included
+        jcenter()
+        maven {
+            // All of React Native (JS, Obj-C sources, Android binaries) is installed from npm
+            url "$rootDir/../node_modules/react-native/android"
+        }
+    }
+}
+```
+
+![forEachResult](./readmeImg/LoginGoogle12.png)
+
+6. Modify `android/app/build.gradle`
+
+```gradle
+apply plugin: "com.android.application"
+apply plugin: 'com.google.gms.google-services' // <--- this should be the last line
+
+dependencies {
+    implementation fileTree(dir: "libs", include: ["*.jar"])
+    implementation "com.facebook.react:react-native:+"
+    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.0.0' // <-- add this; newer versions should work too
+}
+
+
+```
+
+## Use in JS code
+
+```js
+import {
+  GoogleSignin,
+  statusCodes,
+} from '@react-native-google-signin/google-signin';
+import {useEffect} from 'react';
+import {useDispatch} from 'react-redux';
+import {setUser} from '../redux/AuthRedux';
+import {IS_ANDROID} from '../utils/constants';
+
+const useAuthentication = () => {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    GoogleSignin.configure({
+      webClientId: IS_ANDROID
+        ? 'client_id_type_3' // android/app/google-services.json
+        : 'REVERSED_CLIENT_ID', // ios/MealMaster/GoogleService-info.plist
+      iosClientId: 'REVERSED_CLIENT_ID', // ios/MealMaster/GoogleService-info.plist
+      offlineAccess: true,
+      forceCodeForRefreshToken: true,
+      //profileImageSize: 150,
+    });
+  }, []);
+
+  const loginGoogle = async () => {
+    try {
+      GoogleSignin.revokeAccess();
+      GoogleSignin.signOut();
+      await GoogleSignin.hasPlayServices();
+      const googleUserInfo = await GoogleSignin.signIn();
+
+      if (googleUserInfo) {
+        dispatch(
+          setUser({
+            firstName: googleUserInfo?.user.name,
+            googleId: googleUserInfo?.user.id,
+            avatar: googleUserInfo?.user?.photo,
+            email: googleUserInfo.user?.email,
+          }),
+        );
+      }
+    } catch (error) {
+      switch (error.code) {
+        case statusCodes.SIGN_IN_CANCELLED:
+          break;
+        case statusCodes.IN_PROGRESS:
+          break;
+        case statusCodes.PLAY_SERVICES_NOT_AVAILABLE:
+          break;
+        case statusCodes.SIGN_IN_REQUIRED:
+          break;
+        default:
+          break;
+      }
+    }
+  };
+
+  return {
+    loginGoogle,
+  };
+};
+
+export {useAuthentication};
+```
+
+</details>
