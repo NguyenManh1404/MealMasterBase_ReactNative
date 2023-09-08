@@ -1546,3 +1546,432 @@ export {useAuthentication};
 ```
 
 </details>
+
+<details>
+    <summary><b>Login with Apple</b></summary>
+
+# Login with Apple
+
+1. Install the library: yarn add @invertase/react-native-apple-authentication (latest version: 2.2.2)
+
+2. Add Capability “Sign in with Apple” to ios project by clicking Signing and capabilities to show the below noted view. Click + Capability and from the menu select Sign in with Apple which will appear at the bottom as highlighted.
+
+![forEachResult](./readmeImg/loginApple1.png)
+
+- If your Identifiers not including Sign in with Apple, do following steps:
+
+  - Go to Apple Console, then select Certificates, IDs & profiles
+    ![forEachResult](./readmeImg/loginApple2.png)
+
+  - Click on `Identifiers` in the left-hand sidebar. Click on your project in the list
+    ![forEachResult](./readmeImg/loginApple3.png)
+
+  - Tick the checkbox for `Sign in with Apple` and click the `Edit` button. Select `Enable as a primary App ID` and click `Save` button
+    ![forEachResult](./readmeImg/loginApple4.png)
+
+  - Click the `Save` button at the top of the screen.
+    ![forEachResult](./readmeImg/loginApple5.png)
+
+3. Use react-native-apple-authentication in JS code
+
+```js
+import appleAuth from '@invertase/react-native-apple-authentication';
+
+const loginApple = async () => {
+  try {
+    const appleAuthRequestResponse = await appleAuth.performRequest({
+      requestedOperation: appleAuth.Operation.LOGIN,
+      requestedScopes: [appleAuth.Scope.EMAIL, appleAuth.Scope.FULL_NAME],
+    });
+    if (!appleAuthRequestResponse.identityToken) {
+    } else {
+      const {identityToken} = appleAuthRequestResponse;
+      if (identityToken) {
+        // use identityToken to handle with BE side
+      }
+    }
+  } catch (error) {
+    if (error?.code === appleAuth.Error.CANCELED) {
+      return;
+    }
+    //show error
+  }
+};
+```
+
+</details>
+
+<details>
+    <summary><b>Use react-query to call api</b></summary>
+
+# Use react-query to call api
+
+1. Install library
+
+```js
+  yarn add @tanstack/react-query
+  yarn add axios
+  yarn add react-native-device-info // use to get app header (helper file)
+
+```
+
+2. Import into `App.js` root file;
+
+```js
+import {
+  NavigationContainer,
+  createNavigationContainerRef,
+} from '@react-navigation/native';
+import React from 'react';
+import {StatusBar} from 'react-native';
+import {Provider, useSelector} from 'react-redux';
+import {PersistGate} from 'redux-persist/integration/react';
+import {useAppMode} from './src/hooks/useAppMode';
+import {initI18n} from './src/i18n';
+import {MainNavigator} from './src/navigation/stack';
+import {persistor, store} from './src/redux/store';
+initI18n(); //import multiLanguage
+
+import {MD3LightTheme, PaperProvider} from 'react-native-paper';
+import {APP_COLORS} from './src/themes/colors';
+const navigationRef = createNavigationContainerRef();
+
+import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
+
+const AppWrapper = () => {
+  const {isLightMode} = useAppMode();
+  StatusBar.setBarStyle(isLightMode ? 'default' : 'light-content');
+
+  const userInfo = useSelector(state => state.auth.userInfo);
+
+  return <MainNavigator isAbleToGoHome={userInfo} />;
+};
+
+const App = () => {
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        retry: 3,
+        staleTime: 60 * 1000,
+      },
+    },
+  });
+  return (
+    <NavigationContainer ref={navigationRef}>
+      <QueryClientProvider client={queryClient}>
+        <AppWrapper />
+        <StatusBar />
+      </QueryClientProvider>
+    </NavigationContainer>
+  );
+};
+
+export default App;
+```
+
+3. Make new `src/api` forder and create 2 files `appApi.js` to define api and `auth.js` to call api for authentication funtion
+
+   ![forEachResult](./readmeImg/reactQuery1.png)
+
+```js
+//../src/api/appApi.js
+
+import axios from 'axios';
+import Config from 'react-native-config';
+import {API_TIMEOUT} from '../utils/constants';
+import {STORAGE_KEYS, getString} from '../utils/storage';
+import DeviceInfo from 'react-native-device-info';
+
+const getAppHeaders = async () => {
+  return {
+    'x-os': Platform.OS,
+    'x-version': `${DeviceInfo.getVersion()}(${DeviceInfo.getBuildNumber()})`,
+    'x-bundle-id': DeviceInfo.getBundleId(),
+    'x-device-id': await DeviceInfo.getUniqueId(),
+    'time-zone': new Intl.DateTimeFormat().resolvedOptions().timeZone,
+    'Content-Type': 'application/json',
+  };
+};
+
+const appApi = axios.create({
+  baseURL: Config.BASE_URL_API,
+  timeout: API_TIMEOUT,
+});
+
+console.log(Config.BASE_URL_API);
+
+appApi.interceptors.request.use(async config => {
+  const token = await getString(STORAGE_KEYS.TOKEN);
+  const defaultHeaders = await getAppHeaders();
+  config.headers = {
+    ...defaultHeaders,
+  };
+
+  config.headers.Authorization = `Bearer ${token}`;
+
+  return config;
+});
+
+appApi.interceptors.response.use(
+  response => {
+    return response?.data || response;
+  },
+  async error => {
+    const {
+      config,
+      response: {status},
+    } = error;
+
+    showSystemAlert({
+      message: JSON.stringify(error?.message),
+    });
+
+    return Promise.reject(error.response?.data);
+  },
+);
+
+export const commonQueryDetailFunction = async ({queryKey = []}) => {
+  const {url, params = {}} = queryKey[0];
+  if (!url) {
+    return null;
+  }
+
+  return appApi.get(url, {params});
+};
+
+export default appApi;
+
+//../src/api/auth.js
+
+//example
+
+import appApi from './appApi';
+
+const AUTHENTICATION_ENDPOINTS = Object.freeze({
+  LOGIN: '/api/auth/login',
+  REGISTER: '/api/auth/register',
+  VERIFY: '/api/auth/verify',
+  REQUEST_CODE_VERIFY_EMAIL: '/api/auth/requestCodeVerifyEmail',
+  RESET_PASSWORD: '/api/auth/reset-password',
+});
+
+const loginByEmailApi = async data => {
+  // email, password
+  return appApi.post(AUTHENTICATION_ENDPOINTS.LOGIN, data);
+};
+
+const registerAccountApi = async data => {
+  // firstName, lastName, email, password
+  return appApi.post(AUTHENTICATION_ENDPOINTS.REGISTER, data);
+};
+
+const verifyEmailApi = async data => {
+  //  email, emailVerificationCode
+  return appApi.post(AUTHENTICATION_ENDPOINTS.VERIFY, data);
+};
+
+const requestCodeVerifyEmailApi = async data => {
+  //  email,
+  return appApi.post(AUTHENTICATION_ENDPOINTS.REQUEST_CODE_VERIFY_EMAIL, data);
+};
+
+const resetPasswordApi = async data => {
+  //  email, password, confirmPassword
+  return appApi.post(AUTHENTICATION_ENDPOINTS.RESET_PASSWORD, data);
+};
+
+export {
+  loginByEmailApi,
+  registerAccountApi,
+  requestCodeVerifyEmailApi,
+  resetPasswordApi,
+  verifyEmailApi,
+};
+```
+
+4. Call api in `hooks/useAuthentication.js`
+
+```js
+import {useEffect} from 'react';
+
+import {useNavigation} from '@react-navigation/native';
+import {useMutation} from '@tanstack/react-query';
+import {useDispatch} from 'react-redux';
+import {
+  loginByEmailApi,
+  registerAccountApi,
+  requestCodeVerifyEmailApi,
+  resetPasswordApi,
+  verifyEmailApi,
+} from '../api/auth';
+import {setUser} from '../redux/AuthRedux';
+import {IS_ANDROID} from '../utils/constants';
+import {showSystemAlert} from '../utils/helpers';
+
+const useAuthentication = () => {
+  const dispatch = useDispatch();
+  const {navigate} = useNavigation();
+
+  const {mutateAsync: registerAccount, isLoading: registerAccountLoading} =
+    useMutation(registerAccountApi, {
+      onSuccess: ({email}) => {
+        navigate('VerifyAccount', {email});
+      },
+      onError: error => {
+        showSystemAlert({
+          message: JSON.stringify(error.errors[0].message),
+        });
+      },
+    });
+
+  const {mutateAsync: verifyEmail, isLoading: verifyEmailLoading} = useMutation(
+    verifyEmailApi,
+    {
+      onSuccess: ({data}) => {
+        if (data?.isFromForgotPassword) {
+          navigate('ResetPassword', {email: data?.user?.email});
+        } else {
+          navigate('Login', {email: data?.user?.email});
+        }
+      },
+      onError: error => {
+        showSystemAlert({
+          message: JSON.stringify(error.errors[0].message),
+        });
+      },
+    },
+  );
+
+  const {mutateAsync: loginByEmail, isLoading: loginByEmailLoading} =
+    useMutation(loginByEmailApi, {
+      onSuccess: res => {
+        dispatch(setUser(res?.user));
+      },
+      onError: (error, {email}) => {
+        if (error?.messageCode === 'UNVERIFIED_EMAIL') {
+          navigate('VerifyAccount', {
+            email,
+          });
+          return;
+        }
+        showSystemAlert({
+          message: JSON.stringify(error.errors[0].message),
+        });
+      },
+    });
+
+  const {
+    mutateAsync: requestCodeVerifyEmail,
+    isLoading: requestCodeVerifyEmailLoading,
+  } = useMutation(requestCodeVerifyEmailApi, {
+    onSuccess: res => {
+      navigate('VerifyAccount', {
+        email: res?.email,
+        isFromForgotPassword: true,
+      });
+    },
+    onError: error => {
+      showSystemAlert({
+        message: JSON.stringify(error.errors[0].message),
+      });
+    },
+  });
+
+  const {mutateAsync: resetPassword, isLoading: resetPasswordLoading} =
+    useMutation(resetPasswordApi, {
+      onSuccess: ({data}) => {
+        navigate('Login', {email: data?.user?.email});
+      },
+      onError: error => {
+        showSystemAlert({
+          message: JSON.stringify(error.errors[0].message),
+        });
+      },
+    });
+
+  return {
+    loginByEmail,
+    registerAccount,
+    verifyEmail,
+    requestCodeVerifyEmail,
+    resetPassword,
+    verifyEmailLoading,
+    registerAccountLoading,
+    loginByEmailLoading,
+    requestCodeVerifyEmailLoading,
+    resetPasswordLoading,
+  };
+};
+
+export {useAuthentication};
+```
+
+5. Demo for login funtion
+
+```js
+const Login = () => {
+  const {navigate} = useNavigation();
+  const {t} = useTranslation();
+  const route = useRoute();
+  const {email} = route.params || {};
+
+  const {loginByEmail, loginByEmailLoading} = useAuthentication();
+
+  const formik = useFormik({
+    initialValues: {
+      email: email || 'manh.nguyen22@student.passerellesnumeriques.org',
+      password: '123456',
+    },
+    validationSchema: Yup.object({
+      email: Yup.string()
+        .email(t('validation.emailInvalid'))
+        .required(t('validation.emailIsRequire')),
+      password: Yup.string()
+        .min(6, t('validation.password6-20'))
+        .max(20, t('validation.password6-20'))
+        .required(t('validation.passwordIsRequire')),
+    }),
+    onSubmit: values => {
+      loginByEmail({...values, tokenDevice: 'demo-token'});
+    },
+  });
+  return (
+    <SafeAreaContainer loading={loginByEmailLoading}>
+      <KeyboardContainer>
+        <Input
+          required
+          keyboardType="email-address"
+          style={styles.input}
+          onChangeText={formik.handleChange('email')}
+          onBlur={formik.handleBlur('email')}
+          error={formik.errors.email}
+          defaultValue={formik.values.email}
+          label={t('authentication.emailAddress')}
+          placeholder={t('authentication.yourEmailAddress')}
+          returnKeyType="next"
+        />
+        <Input
+          required
+          style={styles.input}
+          onChangeText={formik.handleChange('password')}
+          onBlur={formik.handleBlur('password')}
+          error={formik.errors.password}
+          defaultValue={formik.values.password}
+          label={t('authentication.password')}
+          placeholder={t('authentication.password')}
+          secureTextEntry
+        />
+        <Button
+          label={t('authentication.login')}
+          style={styles.button}
+          onPress={formik.handleSubmit}
+        />
+      </KeyboardContainer>
+    </SafeAreaContainer>
+  );
+};
+
+export default Login;
+```
+
+</details>

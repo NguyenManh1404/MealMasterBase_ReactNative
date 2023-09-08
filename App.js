@@ -16,6 +16,8 @@ import {MD3LightTheme, PaperProvider} from 'react-native-paper';
 import {APP_COLORS} from './src/themes/colors';
 const navigationRef = createNavigationContainerRef();
 
+import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
+
 const AppWrapper = () => {
   const {isLightMode} = useAppMode();
   StatusBar.setBarStyle(isLightMode ? 'default' : 'light-content');
@@ -43,14 +45,24 @@ const AppWrapper = () => {
 };
 
 const App = () => {
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        retry: 3,
+        staleTime: 60 * 1000,
+      },
+    },
+  });
   return (
     <NavigationContainer ref={navigationRef}>
-      <Provider store={store}>
-        <PersistGate loading={true} persistor={persistor}>
-          <AppWrapper />
-          <StatusBar />
-        </PersistGate>
-      </Provider>
+      <QueryClientProvider client={queryClient}>
+        <Provider store={store}>
+          <PersistGate loading={true} persistor={persistor}>
+            <AppWrapper />
+            <StatusBar />
+          </PersistGate>
+        </Provider>
+      </QueryClientProvider>
     </NavigationContainer>
   );
 };

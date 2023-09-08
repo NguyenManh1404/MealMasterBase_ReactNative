@@ -1,10 +1,13 @@
 import Login from '../screens/Authentication/Login';
+import Register from '../screens/Authentication/Register';
+import ResetPassword from '../screens/Authentication/ResetPassword';
+import SendCodeVerifyEmail from '../screens/Authentication/SendCodeVerifyEmail';
+import VerifyAccount from '../screens/Authentication/VerifyAccount';
 import FavoriteScreen from '../screens/Favorite';
 import HomeScreen from '../screens/Home';
 import NotificationScreen from '../screens/Notification';
 import ProfileScreen from '../screens/Profile';
 import RecipeScreen from '../screens/Recipe';
-
 const ROUTES = {
   HomeScreen,
   NotificationScreen,
@@ -12,6 +15,10 @@ const ROUTES = {
   FavoriteScreen,
   ProfileScreen,
   Login,
+  Register,
+  VerifyAccount,
+  SendCodeVerifyEmail,
+  ResetPassword,
 };
 
 const ROUTE_NAMES = {
@@ -22,6 +29,10 @@ const ROUTE_NAMES = {
   NotificationScreen: 'NotificationScreen',
   ProfileScreen: 'ProfileScreen',
   Login: 'Login',
+  Register: 'Register',
+  VerifyAccount: 'VerifyAccount',
+  SendCodeVerifyEmail: 'SendCodeVerifyEmail',
+  ResetPassword: 'ResetPassword',
 };
 
 export {ROUTES, ROUTE_NAMES};

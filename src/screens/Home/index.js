@@ -1,7 +1,13 @@
 import i18next from 'i18next';
 import React, {useState} from 'react';
 import {useTranslation} from 'react-i18next';
-import {Image, ScrollView, TouchableOpacity} from 'react-native';
+import {
+  Image,
+  ScrollView,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import {
   Avatar,
   Banner,
@@ -19,6 +25,8 @@ import Text from '../../components/Text';
 import {useAppMode} from '../../hooks/useAppMode';
 import {setLanguage as setLanguageRedux} from '../../redux/AppRedux';
 import {clearUser, setUser} from '../../redux/AuthRedux';
+import {APP_COLORS} from '../../themes/colors';
+import {getRandomColorHex} from '../../utils/helpers';
 
 const HomeScreen = () => {
   const [visible, setVisible] = useState(true);
@@ -108,17 +116,29 @@ const HomeScreen = () => {
               onPress: () => setVisible(false),
             },
           ]}
-          icon={({size}) => (
-            <Image
-              source={{
-                uri: userInfo?.avatar,
-              }}
-              style={{
-                width: size,
-                height: size,
-              }}
-            />
-          )}>
+          icon={({size}) =>
+            userInfo?.avatar ? (
+              <Image
+                source={{
+                  uri: userInfo?.avatar,
+                }}
+                style={{
+                  width: size,
+                  height: size,
+                }}
+              />
+            ) : (
+              <View
+                style={[
+                  styles.defaultAvatar,
+                  {backgroundColor: getRandomColorHex()},
+                ]}>
+                <Text type={'bold-20'} color={APP_COLORS.white}>
+                  {userInfo?.firstName?.charAt(0)?.toUpperCase()}
+                </Text>
+              </View>
+            )
+          }>
           <Text variant="titleLarge">Card title</Text>
           There was a problem processing a transaction on your credit card.
         </Banner>
@@ -151,4 +171,13 @@ const HomeScreen = () => {
 
 export default HomeScreen;
 
-// const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  defaultAvatar: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: APP_COLORS.blue,
+  },
+});

@@ -10,5 +10,6 @@ const APP_COLORS = {
   greyL2: '#857E7F',
   black: '#000',
   gray: '#808080',
+  modalFade: 'rgba(0, 0, 0, 0.5)',
 };
 export {APP_COLORS};

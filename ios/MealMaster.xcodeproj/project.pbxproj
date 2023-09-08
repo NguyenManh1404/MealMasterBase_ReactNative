@@ -43,6 +43,7 @@
 		6F64EDCE25642F68BB9EF0D2 /* Pods-MealMaster-MealMasterTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MealMaster-MealMasterTests.release.xcconfig"; path = "Target Support Files/Pods-MealMaster-MealMasterTests/Pods-MealMaster-MealMasterTests.release.xcconfig"; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = MealMaster/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		D4D8D93E7C74165AF3591F20 /* Pods-MealMaster-MealMasterTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MealMaster-MealMasterTests.debug.xcconfig"; path = "Target Support Files/Pods-MealMaster-MealMasterTests/Pods-MealMaster-MealMasterTests.debug.xcconfig"; sourceTree = "<group>"; };
+		DDA954D52A9DCE9C00CE8695 /* MealMaster.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = MealMaster.entitlements; path = MealMaster/MealMaster.entitlements; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
@@ -86,6 +87,7 @@
 		13B07FAE1A68108700A75B9A /* MealMaster */ = {
 			isa = PBXGroup;
 			children = (
+				DDA954D52A9DCE9C00CE8695 /* MealMaster.entitlements */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.mm */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
@@ -485,6 +487,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = MealMaster/MealMaster.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = MealMaster/Info.plist;
@@ -511,7 +514,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = MealMaster/MealMaster.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = MealMaster/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

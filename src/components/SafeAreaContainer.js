@@ -1,7 +1,12 @@
 import React, {useMemo} from 'react';
-import {Modal, Platform, SafeAreaView, StyleSheet, View} from 'react-native';
-import {LoadingIndicator} from '.';
-import {useAppMode} from '../hooks/useAppMode';
+import {
+  ActivityIndicator,
+  Modal,
+  Platform,
+  SafeAreaView,
+  StyleSheet,
+  View,
+} from 'react-native';
 import {APP_COLORS} from '../themes/colors';
 import {HAS_SAFE_VIEW_INSET_TOP} from '../utils/constants';
 
@@ -48,8 +53,6 @@ const SafeAreaContainer = ({
   loadingColor,
   useBottomPadding = false,
 }) => {
-  const {appModeColor} = useAppMode();
-
   const defaultStyle = useMemo(() => {
     return styleByProperties({
       useRow,
@@ -62,20 +65,12 @@ const SafeAreaContainer = ({
   const Container = useSafe ? SafeAreaView : View;
 
   return (
-    <Container
-      style={[
-        ...defaultStyle,
-        style,
-        {backgroundColor: appModeColor.mainBackgroundColor},
-      ]}>
+    <Container style={[...defaultStyle, style]}>
       {children}
       {loading && (
         <Modal visible={loading} transparent statusBarTranslucent>
           <View style={styles.loadingView}>
-            <LoadingIndicator
-              size="large"
-              loadingColor={loadingColor || APP_COLORS.primary}
-            />
+            <ActivityIndicator color={loadingColor || APP_COLORS.primary} />
           </View>
         </Modal>
       )}
@@ -105,31 +100,3 @@ const styles = StyleSheet.create({
 });
 
 export default SafeAreaContainer;
-
-// import React from 'react';
-// import {SafeAreaView as RNSafeAreaView, StyleSheet} from 'react-native';
-// import {useAppMode} from '../hooks/useAppMode';
-
-// const SafeAreaContainer = viewProps => {
-//   const {bgColor, style, children, ...props} = viewProps;
-//   const {appModeColor} = useAppMode();
-//   return (
-//     <RNSafeAreaView
-//       style={[
-//         style,
-//         styles.container,
-//         {backgroundColor: bgColor || appModeColor.mainBackgroundColor},
-//       ]}
-//       {...props}>
-//       {children}
-//     </RNSafeAreaView>
-//   );
-// };
-
-// export default SafeAreaContainer;
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//   },
-// });

@@ -1,34 +1,33 @@
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useRoute} from '@react-navigation/native';
 import {useFormik} from 'formik';
 import React from 'react';
 import {useTranslation} from 'react-i18next';
 import {StyleSheet, TouchableOpacity, View} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
-import {useDispatch, useSelector} from 'react-redux';
 import * as Yup from 'yup';
 import {
   Button,
+  Input,
   KeyboardContainer,
   SafeAreaContainer,
   Text,
 } from '../../components';
-import Input from '../../components/Input';
 import {useAuthentication} from '../../hooks/useAuthentication';
-import {setIsAbleToGoHome} from '../../redux/AppRedux';
 import {APP_COLORS} from '../../themes/colors';
 import {SCREEN_WIDTH} from '../../utils/constants';
 
 const Login = () => {
   const {navigate} = useNavigation();
   const {t} = useTranslation();
-  const dispatch = useDispatch();
-  const isAbleToGoHome = useSelector(state => state.app.isAbleToGoHome);
+  const route = useRoute();
+  const {email} = route.params || {};
 
-  const {loginFacebook, loginGoogle} = useAuthentication();
+  const {loginFacebook, loginGoogle, loginByEmail, loginByEmailLoading} =
+    useAuthentication();
 
   const formik = useFormik({
     initialValues: {
-      email: 'manh.nguyen22@student.passerellesnumeriques.org',
+      email: email || 'manh.nguyen22@student.passerellesnumeriques.org',
       password: '123456',
     },
     validationSchema: Yup.object({
@@ -41,20 +40,19 @@ const Login = () => {
         .required(t('validation.passwordIsRequire')),
     }),
     onSubmit: values => {
-      dispatch(setIsAbleToGoHome(!isAbleToGoHome));
-      // loginByEmail({...values, tokenDevice: tokenMessage});
+      loginByEmail({...values, tokenDevice: 'demo-token'});
     },
   });
 
   const navigateFogortPassWord = () => {
-    navigate('VerifyCode');
+    navigate('SendCodeVerifyEmail');
   };
 
   const navigateSignIn = () => {
-    navigate('RegisterAccount');
+    navigate('Register');
   };
   return (
-    <SafeAreaContainer>
+    <SafeAreaContainer loading={loginByEmailLoading}>
       <KeyboardContainer>
         <View style={styles.body}>
           <View style={styles.form}>
@@ -120,7 +118,7 @@ const Login = () => {
                   onPress={loginFacebook}>
                   <Icon
                     name="facebook"
-                    size={30}
+                    size={28}
                     color={'#139ed9'}
                     solid
                     style={styles.imageSocial}
@@ -135,7 +133,7 @@ const Login = () => {
                   onPress={() => {}}>
                   <Icon
                     name="apple"
-                    size={30}
+                    size={28}
                     color={'black'}
                     solid
                     style={styles.imageSocial}
@@ -149,7 +147,7 @@ const Login = () => {
                   onPress={loginGoogle}>
                   <Icon
                     name="google"
-                    size={30}
+                    size={28}
                     color={'#e34133'}
                     solid
                     style={styles.imageSocial}
@@ -221,7 +219,7 @@ const styles = StyleSheet.create({
   viewButton: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginTop: 50,
+    marginVertical: 50,
   },
   socialView: {
     marginTop: 59,

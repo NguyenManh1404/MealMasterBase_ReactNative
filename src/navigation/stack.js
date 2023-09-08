@@ -64,11 +64,35 @@ const MainNavigator = ({isAbleToGoHome}) => {
           );
         })
       ) : (
-        <Stack.Screen
-          name={ROUTE_NAMES.Login}
-          component={ROUTES.Login}
-          options={{headerShown: false}}
-        />
+        <Stack.Group
+          screenOptions={SCREEN_OPTION}
+          initialRouteName={ROUTE_NAMES.Login}>
+          <Stack.Screen
+            name={ROUTE_NAMES.Login}
+            component={ROUTES.Login}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name={ROUTE_NAMES.Register}
+            component={ROUTES.Register}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name={ROUTE_NAMES.VerifyAccount}
+            component={ROUTES.VerifyAccount}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name={ROUTE_NAMES.SendCodeVerifyEmail}
+            component={ROUTES.SendCodeVerifyEmail}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name={ROUTE_NAMES.ResetPassword}
+            component={ROUTES.ResetPassword}
+            options={{headerShown: false}}
+          />
+        </Stack.Group>
       )}
     </Stack.Navigator>
   );
