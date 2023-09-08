@@ -29,7 +29,7 @@ const requestCodeVerifyEmailApi = async data => {
 };
 
 const resetPasswordApi = async data => {
-  //  email, password, passwordVerificationCode
+  //  email, password, confirmPassword
   return appApi.post(AUTHENTICATION_ENDPOINTS.RESET_PASSWORD, data);
 };
 
