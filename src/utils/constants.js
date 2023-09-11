@@ -1,6 +1,8 @@
 import {DefaultTheme} from '@react-navigation/native';
 import {Dimensions, Platform} from 'react-native';
 import DeviceInfo from 'react-native-device-info';
+import DocumentPicker from 'react-native-document-picker';
+import {PERMISSIONS} from 'react-native-permissions';
 import {APP_COLORS} from '../themes/colors';
 import {FONT_SIZES} from '../themes/fonts';
 
@@ -38,10 +40,39 @@ const HIT_SLOP = {top: 10, right: 10, bottom: 10, left: 10};
 const HAS_DYNAMIC_ISLAND = DeviceInfo.hasDynamicIsland();
 const HAS_NOTCH = DeviceInfo.hasNotch();
 const HAS_SAFE_VIEW_INSET_TOP = HAS_DYNAMIC_ISLAND || HAS_NOTCH;
+
+//pick image
+
+const CAMERA_PERMISSION_STRING = Platform.select({
+  ios: PERMISSIONS.IOS.CAMERA,
+  android: PERMISSIONS.ANDROID.CAMERA,
+});
+
+const PHOTO_PERMISSION_STRING = Platform.select({
+  ios: PERMISSIONS.IOS.PHOTO_LIBRARY,
+  android: PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE,
+});
+
+const PICKER_METHOD = {
+  CAMERA: 'camera',
+  PHOTO: 'photo',
+  VIDEO: [DocumentPicker.types.video],
+  DOCUMENT: [
+    DocumentPicker.types.pdf,
+    DocumentPicker.types.docx,
+    DocumentPicker.types.pptx,
+    DocumentPicker.types.doc,
+    DocumentPicker.types.ppt,
+  ],
+};
+
+//pick image
+
 export {
   API_TIMEOUT,
   APP_THEME,
   BUTTON_VARIANTS,
+  CAMERA_PERMISSION_STRING,
   DEFAULT_FONT_SIZE,
   DEFAULT_LANGUAGE,
   EMPTY_STRING,
@@ -52,6 +83,8 @@ export {
   IS_ANDROID,
   IS_IOS,
   LANGUAGE_KEY,
+  PHOTO_PERMISSION_STRING,
+  PICKER_METHOD,
   SCREEN_HEIGHT,
   SCREEN_WIDTH,
   SUPPORTED_LANGUAGES,

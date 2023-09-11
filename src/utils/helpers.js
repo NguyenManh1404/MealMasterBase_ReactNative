@@ -1,5 +1,8 @@
-import {Alert, Linking, Platform} from 'react-native';
+import i18next from 'i18next';
+import {ActionSheetIOS, Alert, Linking, Platform} from 'react-native';
 import DeviceInfo from 'react-native-device-info';
+import DialogAndroid from 'react-native-dialogs/DialogAndroid';
+import {IS_IOS} from './constants';
 
 const isEmpty = val => val == null || !(Object.keys(val) || val).length;
 
@@ -76,13 +79,101 @@ const isURL = str => {
   return urlPattern.test(str);
 };
 
+//PICK DOCUMENT start
+
+const showMenuOptions = ({
+  data,
+  onSelectItem,
+  labelKey = 'label',
+  idKey = 'id',
+  useTranslate = false,
+}) => {
+  const {title, items, selectedId, cancelLabel} = data;
+  if (IS_IOS) {
+    const cancelLabelIOS = cancelLabel || i18next.t('buttons.cancel');
+
+    const labels = items?.map(e =>
+      useTranslate ? i18next.t(e[labelKey]) : e[labelKey],
+    );
+
+    ActionSheetIOS.showActionSheetWithOptions(
+      {
+        title,
+        options: [...labels, cancelLabelIOS],
+        destructiveButtonIndex: -1,
+        cancelButtonIndex: items.length,
+      },
+      index => {
+        if (index === items.length) {
+          return;
+        }
+        onSelectItem(index, items[index]);
+      },
+    );
+  } else {
+    DialogAndroid.showPicker(title, null, {
+      items: useTranslate
+        ? items?.map(item => {
+            return {...item, [labelKey]: i18next.t(item[labelKey])};
+          })
+        : items,
+      type: DialogAndroid.listRadio,
+      selectedId: selectedId,
+      labelKey,
+      idKey,
+      negativeText: 'Cancel',
+      positiveText: 'Ok',
+    }).then(result => {
+      const {action, selectedItem} = result;
+      if (action === 'actionSelect') {
+        const index = items.findIndex(e => e[idKey] === selectedItem[idKey]);
+        if (index >= 0) {
+          onSelectItem(index);
+        }
+      }
+    });
+  }
+};
+
+const roundByteToMB = bytes => {
+  return Math.round((bytes / 1000000 + Number.EPSILON) * 100) / 100;
+};
+
+const getMaxSize = imagePayload => {
+  const isVideo =
+    imagePayload?.mime?.startsWith('video') ||
+    imagePayload?.type?.startsWith('video');
+  const isImage = imagePayload?.mime?.startsWith('image');
+
+  if (isVideo) {
+    return {
+      maxSize: 25,
+      errorMessage: 'picker.invalidVideoType',
+    };
+  }
+  if (isImage) {
+    return {
+      maxSize: 15,
+      errorMessage: 'picker.invalidImageSize',
+    };
+  }
+  return {
+    maxSize: 10,
+    errorMessage: 'picker.invalidFile',
+  };
+};
+//PICK DOCUMENT end
+
 export {
   checkValidYoutubeLink,
   getAppHeaders,
+  getMaxSize,
   getRandomColorHex,
   getYouTubeThumbnail,
   handleOpenLink,
   isEmpty,
   isURL,
+  roundByteToMB,
+  showMenuOptions,
   showSystemAlert,
 };

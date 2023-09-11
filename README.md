@@ -1970,3 +1970,679 @@ export default Login;
 ```
 
 </details>
+
+<details>
+    <summary><b>Take Photo and Pick Image from library</b></summary>
+
+# Take Photo and Pick Image from library
+
+1. Add library;
+
+```
+
+yarn add react-native-permissions
+yarn add react-native-image-crop-picker
+yarn add react-native-document-picker
+yarn add react-native-dialogs
+
+```
+
+2. Make **useMediaPicker** to mange picker
+
+```js
+//../hooks/useMediaPicker.js
+
+import i18next from 'i18next';
+import ImagePicker from 'react-native-image-crop-picker';
+import {RESULTS, openSettings, request} from 'react-native-permissions';
+import {uploadFileApi} from '../api/upload';
+import {
+  CAMERA_PERMISSION_STRING,
+  DEFAULT_PICKER_OPTION,
+  PHOTO_PERMISSION_STRING,
+  PICKER_METHOD,
+} from '../utils/constants';
+import {
+  getMaxSize,
+  roundByteToMB,
+  showMenuOptions,
+  showSystemAlert,
+} from '../utils/helpers';
+
+const requestPermission = async (error, method) => {
+  try {
+    const response = await request(
+      method === PICKER_METHOD.CAMERA
+        ? CAMERA_PERMISSION_STRING
+        : PHOTO_PERMISSION_STRING,
+    );
+    if (
+      [RESULTS.BLOCKED, RESULTS.UNAVAILABLE, RESULTS.DENIED].includes(response)
+    ) {
+      return showSystemAlert({
+        message: error?.message,
+        actions: [
+          {text: 'cancel', onPress: () => {}},
+          {
+            text: 'ok',
+            onPress: openSettings,
+          },
+        ],
+      });
+    }
+  } catch (errors) {}
+};
+
+const getImageFromPicker = async (options = {}) => {
+  try {
+    const response = await ImagePicker.openPicker({
+      ...DEFAULT_PICKER_OPTION,
+      ...options,
+      smartAlbums: ['UserLibrary', 'Favorites'],
+      compressVideoPreset: 'Passthrough',
+    });
+    return response;
+  } catch (error) {
+    getErrorFromPicker(error);
+  }
+};
+
+const getImageFromCamera = async () => {
+  try {
+    const response = await ImagePicker.openCamera(DEFAULT_PICKER_OPTION);
+    return response;
+  } catch (error) {
+    getErrorFromCamera(error);
+  }
+};
+
+const getErrorFromPicker = error => {
+  switch (error?.code) {
+    case 'E_NO_LIBRARY_PERMISSION':
+      requestPermission(error, PICKER_METHOD.PHOTO);
+      break;
+    case 'E_PICKER_CANCELLED':
+      break;
+    default:
+      showSystemAlert({
+        message: error?.message,
+      });
+      break;
+  }
+};
+
+const getErrorFromCamera = async error => {
+  await requestPermission(error, PICKER_METHOD.CAMERA);
+  switch (error.code) {
+    case 'E_NO_CAMERA_PERMISSION':
+      requestPermission(error, PICKER_METHOD.CAMERA);
+      break;
+    default:
+      showSystemAlert({
+        message: error?.message,
+      });
+      break;
+  }
+};
+
+export const validateBeforeUploading = ({
+  uploadFn,
+  pickerResponse,
+  validateEnabled = false,
+  customAlert,
+}) => {
+  if (!pickerResponse) {
+    return;
+  }
+  if (validateEnabled) {
+    if (
+      roundByteToMB(pickerResponse.size) >= getMaxSize(pickerResponse).maxSize
+    ) {
+      if (customAlert) {
+        customAlert(getMaxSize(pickerResponse).errorMessage);
+        return;
+      } else {
+        return showSystemAlert({
+          message: i18next.t(getMaxSize(pickerResponse).errorMessage),
+        });
+      }
+    }
+
+    uploadFn?.(pickerResponse);
+    return;
+  }
+  uploadFn?.(pickerResponse);
+};
+
+const useMediaPicker = (resultCallback = () => {}) => {
+  const pickImage = async (options = {}) => {
+    try {
+      const response = await getImageFromPicker(options);
+      validateBeforeUploading({
+        options,
+        validateEnabled: options?.validateEnabled,
+        customAlert: options?.customAlert,
+        pickerResponse: response,
+        uploadFn: async () => {
+          // Dùng formData mới có thể pick file được
+          const formData = new FormData();
+          formData.append('image', {
+            uri: response?.path,
+            name: response?.path,
+            type: response.mime,
+          });
+          //  handle upload
+          const result = await uploadFileApi(formData);
+          resultCallback?.(result);
+          return result;
+        },
+      });
+    } catch (error) {
+      getErrorFromPicker(error);
+    }
+  };
+
+  const openCamera = async (options = {}) => {
+    try {
+      const response = await getImageFromCamera();
+
+      validateBeforeUploading({
+        pickerResponse: response,
+        validateEnabled: options?.validateEnabled,
+        uploadFn: async () => {
+          // Dùng formData mới có thể pick file được
+          const formData = new FormData();
+          formData.append('image', {
+            uri: response?.path,
+            name: response?.path,
+            type: response.mime,
+          });
+          //  handle upload
+          const result = await uploadFileApi(formData);
+          resultCallback?.(result);
+          return result;
+        },
+      });
+    } catch (error) {
+      getErrorFromCamera(error);
+    }
+  };
+
+  const showImagePickerOptions = (options = {}) => {
+    const PICKER_OPTIONS = [
+      {id: 1, label: 'Take a Photo'},
+      {id: 2, label: 'Choose From Library'},
+    ];
+
+    return showMenuOptions({
+      data: {
+        items: PICKER_OPTIONS,
+        title: 'Select your option',
+        selectedId: 0,
+      },
+      onSelectItem: index => {
+        switch (index) {
+          case 0:
+            openCamera(options);
+            break;
+          case 1:
+            pickImage(options);
+            break;
+          default:
+            break;
+        }
+      },
+    });
+  };
+
+  return {
+    pickImage,
+    openCamera,
+    showImagePickerOptions,
+  };
+};
+
+export {useMediaPicker};
+```
+
+3. Some contanst and helper funtion to import
+
+```js
+//src/utils/constants.js
+
+const CAMERA_PERMISSION_STRING = Platform.select({
+  ios: PERMISSIONS.IOS.CAMERA,
+  android: PERMISSIONS.ANDROID.CAMERA,
+});
+
+const PHOTO_PERMISSION_STRING = Platform.select({
+  ios: PERMISSIONS.IOS.PHOTO_LIBRARY,
+  android: PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE,
+});
+
+const PICKER_METHOD = {
+  CAMERA: 'camera',
+  PHOTO: 'photo',
+  VIDEO: [DocumentPicker.types.video],
+  DOCUMENT: [
+    DocumentPicker.types.pdf,
+    DocumentPicker.types.docx,
+    DocumentPicker.types.pptx,
+    DocumentPicker.types.doc,
+    DocumentPicker.types.ppt,
+  ],
+};
+
+const DEFAULT_PICKER_OPTION = {
+  forceJpg: true,
+  cropping: false,
+  compressImageQuality: Platform.select({
+    ios: 0.8,
+    android: 1,
+  }),
+};
+
+//src/utils/heplers.js
+
+import i18next from 'i18next';
+import {ActionSheetIOS} from 'react-native';
+import DeviceInfo from 'react-native-device-info';
+import DialogAndroid from 'react-native-dialogs/DialogAndroid';
+import {IS_IOS} from './constants';
+
+//PICK DOCUMENT start
+
+const showMenuOptions = ({
+  data,
+  onSelectItem,
+  labelKey = 'label',
+  idKey = 'id',
+  useTranslate = false,
+}) => {
+  const {title, items, selectedId, cancelLabel} = data;
+  if (IS_IOS) {
+    const cancelLabelIOS = cancelLabel || i18next.t('buttons.cancel');
+
+    const labels = items?.map(e =>
+      useTranslate ? i18next.t(e[labelKey]) : e[labelKey],
+    );
+
+    ActionSheetIOS.showActionSheetWithOptions(
+      {
+        title,
+        options: [...labels, cancelLabelIOS],
+        destructiveButtonIndex: -1,
+        cancelButtonIndex: items.length,
+      },
+      index => {
+        if (index === items.length) {
+          return;
+        }
+        onSelectItem(index, items[index]);
+      },
+    );
+  } else {
+    DialogAndroid.showPicker(title, null, {
+      items: useTranslate
+        ? items?.map(item => {
+            return {...item, [labelKey]: i18next.t(item[labelKey])};
+          })
+        : items,
+      type: DialogAndroid.listRadio,
+      selectedId: selectedId,
+      labelKey,
+      idKey,
+      negativeText: 'Cancel',
+      positiveText: 'Ok',
+    }).then(result => {
+      const {action, selectedItem} = result;
+      if (action === 'actionSelect') {
+        const index = items.findIndex(e => e[idKey] === selectedItem[idKey]);
+        if (index >= 0) {
+          onSelectItem(index);
+        }
+      }
+    });
+  }
+};
+
+const roundByteToMB = bytes => {
+  return Math.round((bytes / 1000000 + Number.EPSILON) * 100) / 100;
+};
+
+const getMaxSize = imagePayload => {
+  const isVideo =
+    imagePayload?.mime?.startsWith('video') ||
+    imagePayload?.type?.startsWith('video');
+  const isImage = imagePayload?.mime?.startsWith('image');
+
+  if (isVideo) {
+    return {
+      maxSize: 25,
+      errorMessage: 'picker.invalidVideoType',
+    };
+  }
+  if (isImage) {
+    return {
+      maxSize: 15,
+      errorMessage: 'picker.invalidImageSize',
+    };
+  }
+  return {
+    maxSize: 10,
+    errorMessage: 'picker.invalidFile',
+  };
+};
+//PICK DOCUMENT end
+```
+
+4. Make file to push image local to server
+
+```js
+//src/api/upload.js
+import axios from 'axios';
+import Config from 'react-native-config';
+
+const UPLOAD_ENDPOINTS = Object.freeze({
+  IMAGE: '/image',
+});
+
+const uploadFileApi = async data => {
+  const response = await axios.put(`${Config.BASE_URL_API}/image`, data, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
+
+  return response.data;
+};
+
+export {UPLOAD_ENDPOINTS, uploadFileApi};
+```
+
+5. setup for IOS
+
+- Add permissions for IOS, open Xcode to add permissions
+
+  ![forEachResult](./readmeImg/pickImage2.png)
+
+  ![forEachResult](./readmeImg/pickImage2.png)
+
+- Clean and rebuild again
+
+7. Demo use on JS file
+<details>
+
+```js
+import {useFormik} from 'formik';
+import React, {useState} from 'react';
+import {
+  Image,
+  ScrollView,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import Config from 'react-native-config';
+import * as Yup from 'yup';
+import {LocalImage, SafeAreaContainer, Text} from '../../components';
+import {useMediaPicker} from '../../hooks/useMediaPicker';
+import {APP_COLORS} from '../../themes/colors';
+import {SCREEN_WIDTH} from '../../utils/constants';
+
+const RecipeScreen = () => {
+  const [images, setImages] = useState([]);
+
+  const formik = useFormik({
+    initialValues: {
+      images: [],
+    },
+    validationSchema: Yup.object({
+      images: Yup.array()
+
+        .min(0, 'Images must have at least one element')
+        .required('Please select images'),
+    }),
+    onSubmit: values => {
+      // createRecipe(values);
+    },
+  });
+
+  const onRemoveImage = index => {
+    let item = [...images];
+    item.splice(index, 1);
+    setImages([...item]);
+    formik.setFieldValue('images', images);
+  };
+
+  const {showImagePickerOptions} = useMediaPicker(imageResult => {
+    if (imageResult?.payload.filename) {
+      setImages([...images, imageResult?.payload.filename]);
+      formik.setFieldValue('images', images);
+    }
+  });
+
+  const pickImage = () => {
+    showImagePickerOptions();
+  };
+
+  const onCreate = () => {
+    formik.handleSubmit();
+  };
+
+  return (
+    <SafeAreaContainer loading={false}>
+      <ScrollView>
+        <Text type={'bold-20'} style={styles.titleCreate}>
+          Create recipe
+        </Text>
+
+        <View style={styles.viewAddImage}>
+          {images.map((image, index) => {
+            return (
+              <View key={index} style={styles.imageItem}>
+                <TouchableOpacity
+                  onPress={() => onRemoveImage(index)}
+                  style={styles.icDelete}>
+                  <LocalImage
+                    imageKey={'icDelete'}
+                    style={styles.iconDelete}
+                    tintColor={APP_COLORS.error}
+                  />
+                </TouchableOpacity>
+                <Image
+                  source={{
+                    uri: `${Config.BASE_URL_API}/public/${image}`,
+                  }}
+                  style={styles.imageFood}
+                />
+              </View>
+            );
+          })}
+          <TouchableOpacity onPress={pickImage} style={styles.btnAdd}>
+            <LocalImage imageKey={'addIcon'} style={styles.addIcon} />
+            <Text type={'bold-14'}>Add Image</Text>
+          </TouchableOpacity>
+          {formik.errors.images && (
+            <Text style={styles.textError}>{formik.errors.images} </Text>
+          )}
+        </View>
+      </ScrollView>
+      <TouchableOpacity style={styles.btnSave} onPress={() => onCreate()}>
+        <Text style={styles.textsave}>Save my receip</Text>
+      </TouchableOpacity>
+    </SafeAreaContainer>
+  );
+};
+export default RecipeScreen;
+
+const styles = StyleSheet.create({
+  iconDelete: {height: 15, width: 15},
+  addIcon: {height: 40, width: 40},
+  icDelete: {
+    alignSelf: 'flex-end',
+    position: 'absolute',
+    zIndex: 1,
+    top: -10,
+    backgroundColor: APP_COLORS.white,
+    width: 25,
+    height: 25,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 20,
+  },
+  btnAdd: {
+    alignItems: 'center',
+  },
+  imageItem: {
+    marginVertical: 10,
+    marginHorizontal: 5,
+  },
+  viewAddImage: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flexWrap: 'wrap',
+  },
+  videoView: {
+    width: SCREEN_WIDTH - 40,
+    height: 200,
+    marginBottom: 10,
+  },
+  body: {
+    padding: 20,
+  },
+  input: {
+    marginVertical: 10,
+  },
+  inputt: {
+    marginVertical: 10,
+    marginRight: 10,
+    color: APP_COLORS.black,
+  },
+  btnSave: {
+    backgroundColor: APP_COLORS.primary,
+    borderRadius: 5,
+    height: 45,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 10,
+    marginHorizontal: 20,
+    marginBottom: 10,
+  },
+  textsave: {
+    color: APP_COLORS.white,
+    fontWeight: 'bold',
+    fontSize: 16,
+  },
+  titleCreate: {
+    alignSelf: 'center',
+  },
+
+  icCookTime: {
+    marginLeft: 20,
+    width: 30,
+    height: 30,
+  },
+  textCooktime: {
+    fontWeight: 'bold',
+    fontSize: 15,
+  },
+  category: {
+    flexDirection: 'row',
+  },
+  checkboxContainer: {
+    marginLeft: 50,
+    marginTop: 10,
+    marginBottom: 20,
+  },
+  textcategory: {
+    fontWeight: 'bold',
+    fontSize: 20,
+    marginBottom: 10,
+    marginTop: 10,
+  },
+  inputingredeients: {
+    flexDirection: 'row',
+  },
+  btnIc: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItem: 'center',
+    marginRight: 20,
+  },
+  icUnion: {
+    width: 20,
+    height: 20,
+    marginLeft: 5,
+  },
+  imageFood: {
+    height: 100,
+    width: 100,
+  },
+  cooktime: {
+    flexDirection: 'row',
+    backgroundColor: APP_COLORS.popularCategory,
+    marginBottom: 10,
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  stepItem: {
+    flexDirection: 'row',
+  },
+
+  ingredientsInput: {
+    width: 180,
+    marginVertical: 5,
+    maxHeight: 50,
+    borderWidth: 1,
+    borderRadius: 5,
+    borderColor: APP_COLORS.grey,
+  },
+  ingredientsInput2: {
+    width: 120,
+    maxHeight: 80,
+    marginVertical: 5,
+    marginLeft: 10,
+    borderWidth: 1,
+    borderRadius: 5,
+    borderColor: APP_COLORS.grey,
+  },
+  textError: {
+    color: APP_COLORS.error,
+  },
+  stepContainer: {
+    flexDirection: 'row',
+    padding: 24,
+    backgroundColor: APP_COLORS.popularCategory,
+    borderRadius: 20,
+    alignItems: 'center',
+    marginVertical: 10,
+    width: 300,
+    height: 100,
+  },
+  stepNumberContainer: {
+    width: 30,
+    height: 30,
+    backgroundColor: APP_COLORS.white,
+    borderRadius: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 24,
+  },
+  stepNumber: {
+    fontWeight: 'bold',
+  },
+  stepInput: {
+    textAlign: 'left',
+    flex: 1,
+  },
+  textview: {
+    flexDirection: 'row',
+  },
+});
+```
+
+</details>
+
+</details>

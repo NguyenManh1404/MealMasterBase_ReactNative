@@ -24,5 +24,8 @@
     "emailIsRequire": "Email is require",
     "password6-20": "Password from 6-20 characters",
     "passwordIsRequire": "Password is require"
+  },
+  "buttons": {
+    "cancel": "Cancel"
   }
 }
