@@ -30,7 +30,7 @@ const BUTTON_VARIANTS = Object.freeze({
   FILL: 'fill',
   OUTLINE: 'outline',
 });
-const FALLBACK_FONT = 'regular';
+const FALLBACK_FONT = 'normal';
 const DEFAULT_FONT_SIZE = FONT_SIZES.medium;
 const INPUT_ICON_SIZE = 20;
 const EMPTY_STRING = '';

@@ -15,9 +15,10 @@ import {
   resetPasswordApi,
   verifyEmailApi,
 } from '../api/auth';
-import {setUser} from '../redux/AuthRedux';
+import {setToken, setUser} from '../redux/AuthRedux';
 import {IS_ANDROID} from '../utils/constants';
 import {showSystemAlert} from '../utils/helpers';
+import {STORAGE_KEYS, storeData} from '../utils/storage';
 
 const useAuthentication = () => {
   const dispatch = useDispatch();
@@ -57,6 +58,10 @@ const useAuthentication = () => {
     useMutation(loginByEmailApi, {
       onSuccess: res => {
         dispatch(setUser(res?.user));
+
+        storeData({key: STORAGE_KEYS.TOKEN, value: res?.accessToken});
+
+        dispatch(setToken(res?.accessToken));
       },
       onError: (error, {email}) => {
         if (error?.messageCode === 'UNVERIFIED_EMAIL') {
