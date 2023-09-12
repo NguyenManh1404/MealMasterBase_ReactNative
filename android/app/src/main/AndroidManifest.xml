@@ -2,6 +2,15 @@
   package="com.mealmaster">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <!-- quyen mo camera -->
+    <uses-permission android:name="android.permission.CAMERA"/>  
+    <uses-feature android:name="android.hardware.camera" android:required="false"/>
+    <uses-feature android:name="android.hardware.camera.front" android:required="false"/>
+    <!-- quyen mo camera -->
+    
+    <!-- quyen mo thu vien  -->
+        <uses-permission android:name="android.permission.READ_MEDIA_IMAGES"/>
+    <!-- quyen mo thu vien  -->
 
     <application
       android:name=".MainApplication"

@@ -1983,6 +1983,7 @@ export default Login;
 yarn add react-native-permissions
 yarn add react-native-image-crop-picker
 yarn add react-native-document-picker
+yarn add mime
 yarn add react-native-dialogs
 
 ```
@@ -1993,6 +1994,7 @@ yarn add react-native-dialogs
 //../hooks/useMediaPicker.js
 
 import i18next from 'i18next';
+import mime from 'mime';
 import ImagePicker from 'react-native-image-crop-picker';
 import {RESULTS, openSettings, request} from 'react-native-permissions';
 import {uploadFileApi} from '../api/upload';
@@ -2128,8 +2130,8 @@ const useMediaPicker = (resultCallback = () => {}) => {
           const formData = new FormData();
           formData.append('image', {
             uri: response?.path,
-            name: response?.path,
-            type: response.mime,
+            name: response?.path.split('/').pop(),
+            type: mime.getType(response?.path),
           });
           //  handle upload
           const result = await uploadFileApi(formData);
@@ -2154,8 +2156,8 @@ const useMediaPicker = (resultCallback = () => {}) => {
           const formData = new FormData();
           formData.append('image', {
             uri: response?.path,
-            name: response?.path,
-            type: response.mime,
+            name: response?.path.split('/').pop(),
+            type: mime.getType(response?.path),
           });
           //  handle upload
           const result = await uploadFileApi(formData);
@@ -2366,9 +2368,97 @@ export {UPLOAD_ENDPOINTS, uploadFileApi};
 
   ![forEachResult](./readmeImg/pickImage2.png)
 
-  ![forEachResult](./readmeImg/pickImage2.png)
+  ![forEachResult](./readmeImg/pickImage1.png)
+
+- Modified `/ios/Podfile` to add permission with react-native < 0.72
+
+```js
+
+require_relative '../node_modules/react-native/scripts/react_native_pods'
+require_relative '../node_modules/@react-native-community/cli-platform-ios/native_modules'
+require_relative '../node_modules/react-native-permissions/scripts/setup' // here
+
+platform :ios, '13.0'
+install! 'cocoapods', :deterministic_uuids => false
+ // here start
+setup_permissions([
+  # 'AppTrackingTransparency',
+  # 'BluetoothPeripheral',
+  # 'Calendars',
+  'Camera', //here
+  # 'Contacts',
+  # 'FaceID',
+  # 'LocationAccuracy',
+  # 'LocationAlways',
+  # 'LocationWhenInUse',
+  # 'MediaLibrary',
+  # 'Microphone',
+  # 'Motion',
+  # 'Notifications',
+  'PhotoLibrary', //here
+  # 'PhotoLibraryAddOnly',
+  # 'Reminders',
+  # 'SpeechRecognition',
+  # 'StoreKit'
+])
+
+ // here end
+
+target 'MealMaster' do
+  config = use_native_modules!
+```
 
 - Clean and rebuild again
+
+6. set up for Android
+
+- change file `android/build.gradle` make sure version 33
+
+```js
+buildscript {
+    ext {
+        buildToolsVersion = "33.0.0"
+        minSdkVersion = 21
+        compileSdkVersion = 33
+        targetSdkVersion = 33
+        googlePlayServicesAuthVersion = "19.2.0" // <--- use this version or newer
+
+
+
+......
+    }
+  }
+
+```
+
+![forEachResult](./readmeImg/pickImage3.png)
+
+- change file `../android/app/src/main/AndroidManifest.xml` to add permission
+
+```xml
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+  package="com.mealmaster">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <!-- quyen mo camera -->
+    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-feature android:name="android.hardware.camera" android:required="false"/>
+    <uses-feature android:name="android.hardware.camera.front" android:required="false"/>
+    <!-- quyen mo camera -->
+
+    <!-- quyen mo thu vien  -->
+        <uses-permission android:name="android.permission.READ_MEDIA_IMAGES"/>
+    <!-- quyen mo thu vien  -->
+
+    <application
+      android:name=".MainApplication"
+      android:label="@string/app_name"
+      android:icon="@mipmap/ic_launcher"
+      android:roundIcon="@mipmap/ic_launcher_round"
+      android:allowBackup="false"
+      android:theme="@style/AppTheme">
+
+```
 
 7. Demo use on JS file
 <details>

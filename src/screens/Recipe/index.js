@@ -12,7 +12,6 @@ import * as Yup from 'yup';
 import {LocalImage, SafeAreaContainer, Text} from '../../components';
 import {useMediaPicker} from '../../hooks/useMediaPicker';
 import {APP_COLORS} from '../../themes/colors';
-import {SCREEN_WIDTH} from '../../utils/constants';
 
 const RecipeScreen = () => {
   const [images, setImages] = useState([]);
@@ -127,22 +126,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexWrap: 'wrap',
   },
-  videoView: {
-    width: SCREEN_WIDTH - 40,
-    height: 200,
-    marginBottom: 10,
-  },
-  body: {
-    padding: 20,
-  },
-  input: {
-    marginVertical: 10,
-  },
-  inputt: {
-    marginVertical: 10,
-    marginRight: 10,
-    color: APP_COLORS.black,
-  },
   btnSave: {
     backgroundColor: APP_COLORS.primary,
     borderRadius: 5,
@@ -162,106 +145,12 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
 
-  icCookTime: {
-    marginLeft: 20,
-    width: 30,
-    height: 30,
-  },
-  textCooktime: {
-    fontWeight: 'bold',
-    fontSize: 15,
-  },
-  category: {
-    flexDirection: 'row',
-  },
-  checkboxContainer: {
-    marginLeft: 50,
-    marginTop: 10,
-    marginBottom: 20,
-  },
-  textcategory: {
-    fontWeight: 'bold',
-    fontSize: 20,
-    marginBottom: 10,
-    marginTop: 10,
-  },
-  inputingredeients: {
-    flexDirection: 'row',
-  },
-  btnIc: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItem: 'center',
-    marginRight: 20,
-  },
-  icUnion: {
-    width: 20,
-    height: 20,
-    marginLeft: 5,
-  },
   imageFood: {
     height: 100,
     width: 100,
   },
-  cooktime: {
-    flexDirection: 'row',
-    backgroundColor: APP_COLORS.popularCategory,
-    marginBottom: 10,
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  stepItem: {
-    flexDirection: 'row',
-  },
 
-  ingredientsInput: {
-    width: 180,
-    marginVertical: 5,
-    maxHeight: 50,
-    borderWidth: 1,
-    borderRadius: 5,
-    borderColor: APP_COLORS.grey,
-  },
-  ingredientsInput2: {
-    width: 120,
-    maxHeight: 80,
-    marginVertical: 5,
-    marginLeft: 10,
-    borderWidth: 1,
-    borderRadius: 5,
-    borderColor: APP_COLORS.grey,
-  },
   textError: {
     color: APP_COLORS.error,
-  },
-  stepContainer: {
-    flexDirection: 'row',
-    padding: 24,
-    backgroundColor: APP_COLORS.popularCategory,
-    borderRadius: 20,
-    alignItems: 'center',
-    marginVertical: 10,
-    width: 300,
-    height: 100,
-  },
-  stepNumberContainer: {
-    width: 30,
-    height: 30,
-    backgroundColor: APP_COLORS.white,
-    borderRadius: 20,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginRight: 24,
-  },
-  stepNumber: {
-    fontWeight: 'bold',
-  },
-  stepInput: {
-    textAlign: 'left',
-    flex: 1,
-  },
-  textview: {
-    flexDirection: 'row',
   },
 });

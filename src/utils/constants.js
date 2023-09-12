@@ -66,6 +66,15 @@ const PICKER_METHOD = {
   ],
 };
 
+const DEFAULT_PICKER_OPTION = {
+  forceJpg: true,
+  cropping: false,
+  compressImageQuality: Platform.select({
+    ios: 0.8,
+    android: 1,
+  }),
+};
+
 //pick image
 
 export {
@@ -75,6 +84,7 @@ export {
   CAMERA_PERMISSION_STRING,
   DEFAULT_FONT_SIZE,
   DEFAULT_LANGUAGE,
+  DEFAULT_PICKER_OPTION,
   EMPTY_STRING,
   FALLBACK_FONT,
   HAS_SAFE_VIEW_INSET_TOP,

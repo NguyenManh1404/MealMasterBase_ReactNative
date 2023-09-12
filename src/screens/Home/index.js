@@ -318,15 +318,14 @@ const HomeScreen = () => {
               Popular creators
             </Text>
           </View>
-          <KeyboardContainer horizontal showsHorizontalScrollIndicator={false}>
-            <FlatList
-              data={listCreator}
-              renderItem={renderCreatorItem}
-              horizontal={true}
-              showsHorizontalScrollIndicator={false}
-              keyExtractor={(__, index) => `${index}`}
-            />
-          </KeyboardContainer>
+
+          <FlatList
+            data={listCreator}
+            renderItem={renderCreatorItem}
+            horizontal={true}
+            showsHorizontalScrollIndicator={false}
+            keyExtractor={(__, index) => `${index}`}
+          />
         </View>
       </KeyboardContainer>
     </SafeAreaContainer>

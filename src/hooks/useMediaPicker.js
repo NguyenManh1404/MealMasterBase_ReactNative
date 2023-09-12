@@ -1,4 +1,5 @@
 import i18next from 'i18next';
+import mime from 'mime';
 import ImagePicker from 'react-native-image-crop-picker';
 import {RESULTS, openSettings, request} from 'react-native-permissions';
 import {uploadFileApi} from '../api/upload';
@@ -134,8 +135,8 @@ const useMediaPicker = (resultCallback = () => {}) => {
           const formData = new FormData();
           formData.append('image', {
             uri: response?.path,
-            name: response?.path,
-            type: response.mime,
+            name: response?.path.split('/').pop(),
+            type: mime.getType(response?.path),
           });
           //  handle upload
           const result = await uploadFileApi(formData);
@@ -160,13 +161,17 @@ const useMediaPicker = (resultCallback = () => {}) => {
           const formData = new FormData();
           formData.append('image', {
             uri: response?.path,
-            name: response?.path,
-            type: response.mime,
+            name: response?.path.split('/').pop(),
+            type: mime.getType(response?.path),
           });
           //  handle upload
-          const result = await uploadFileApi(formData);
-          resultCallback?.(result);
-          return result;
+          try {
+            const result = await uploadFileApi(formData);
+            resultCallback?.(result);
+            return result;
+          } catch (error) {
+            console.log(error);
+          }
         },
       });
     } catch (error) {
