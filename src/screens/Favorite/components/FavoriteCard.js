@@ -52,7 +52,7 @@ const FavoriteCard = ({item}) => {
       </TouchableOpacity>
 
       <View style={styles.viewTitle}>
-        <Text type={'semiBold-20'} color={APP_COLORS.white}>
+        <Text type={'bold-20'} color={APP_COLORS.white}>
           {name}
         </Text>
       </View>

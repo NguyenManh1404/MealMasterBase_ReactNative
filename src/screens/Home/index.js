@@ -8,6 +8,8 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import Config from 'react-native-config';
+import {Searchbar} from 'react-native-paper';
 import {SceneMap, TabView} from 'react-native-tab-view';
 import {useSelector} from 'react-redux';
 import {commonQueryDetailFunction} from '../../api/appApi';
@@ -18,9 +20,6 @@ import {
   SafeAreaContainer,
   Text,
 } from '../../components';
-// import {useRefreshOnFocus} from '../../hooks/useRefreshOnFocus';
-import Config from 'react-native-config';
-import {Searchbar} from 'react-native-paper';
 import {useRefreshOnFocus} from '../../hooks/useRefreshOnFocus';
 import {APP_COLORS} from '../../themes/colors';
 import {SCREEN_WIDTH} from '../../utils/constants';
