@@ -123,6 +123,7 @@ const BottomTabs = () => {
         tabBarStyle: {
           backgroundColor: isLightMode ? APP_COLORS.white : APP_COLORS.black,
         },
+        tabBarHideOnKeyboard: true, // hide tab bar when key is open
       }}
       initialRouteName={ROUTE_NAMES.HomeScreen}
       tabBarActiveTintColor={APP_COLORS.primary}>

@@ -6,6 +6,7 @@ const AUTHENTICATION_ENDPOINTS = Object.freeze({
   VERIFY: '/api/auth/verify',
   REQUEST_CODE_VERIFY_EMAIL: '/api/auth/requestCodeVerifyEmail',
   RESET_PASSWORD: '/api/auth/reset-password',
+  GET_AUTH: '/api/auth/getAuth',
 });
 
 const loginByEmailApi = async data => {
@@ -33,7 +34,13 @@ const resetPasswordApi = async data => {
   return appApi.post(AUTHENTICATION_ENDPOINTS.RESET_PASSWORD, data);
 };
 
+const getAuthApi = async data => {
+  //  email, password, confirmPassword
+  return appApi.get(AUTHENTICATION_ENDPOINTS.GET_AUTH, data);
+};
 export {
+  AUTHENTICATION_ENDPOINTS,
+  getAuthApi,
   loginByEmailApi,
   registerAccountApi,
   requestCodeVerifyEmailApi,

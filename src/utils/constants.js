@@ -77,11 +77,19 @@ const DEFAULT_PICKER_OPTION = {
 
 //pick image
 
+const CATEGORY = [
+  {id: 1, label: 'Breakfast', value: 'Breakfast'},
+  {id: 2, label: 'Lunch', value: 'Lunch'},
+  {id: 3, label: 'Diner', value: 'Diner'},
+  {id: 4, label: 'Diet', value: 'Diet'},
+];
+
 export {
   API_TIMEOUT,
   APP_THEME,
   BUTTON_VARIANTS,
   CAMERA_PERMISSION_STRING,
+  CATEGORY,
   DEFAULT_FONT_SIZE,
   DEFAULT_LANGUAGE,
   DEFAULT_PICKER_OPTION,

@@ -19,6 +19,17 @@ const navigationRef = createNavigationContainerRef();
 import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
 
 const AppWrapper = () => {
+  // // auto CALL API to not stop
+  // useQuery({
+  //   queryKey: [{url: AUTHENTICATION_ENDPOINTS.GET_AUTH}],
+  //   queryFn: commonQueryDetailFunction,
+  //   select: res => {
+  //     return res;
+  //   },
+  //   refetchInterval: 50000,
+  // });
+  // // auto CALL API to not stop
+
   const {isLightMode} = useAppMode();
   StatusBar.setBarStyle(isLightMode ? 'default' : 'light-content');
 

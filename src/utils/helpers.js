@@ -2,7 +2,7 @@ import i18next from 'i18next';
 import {ActionSheetIOS, Alert, Linking, Platform} from 'react-native';
 import DeviceInfo from 'react-native-device-info';
 import DialogAndroid from 'react-native-dialogs/DialogAndroid';
-import {IS_IOS} from './constants';
+import {EMPTY_STRING, IS_IOS} from './constants';
 
 const isEmpty = val => val == null || !(Object.keys(val) || val).length;
 
@@ -164,6 +164,10 @@ const getMaxSize = imagePayload => {
 };
 //PICK DOCUMENT end
 
+const valueAsDefault = (value, defaultValue = EMPTY_STRING) => {
+  return isEmpty(value) ? defaultValue : value;
+};
+
 export {
   checkValidYoutubeLink,
   getAppHeaders,
@@ -176,4 +180,5 @@ export {
   roundByteToMB,
   showMenuOptions,
   showSystemAlert,
+  valueAsDefault,
 };

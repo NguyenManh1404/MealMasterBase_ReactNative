@@ -21,6 +21,7 @@ import {
 // import {useRefreshOnFocus} from '../../hooks/useRefreshOnFocus';
 import Config from 'react-native-config';
 import {Searchbar} from 'react-native-paper';
+import {useRefreshOnFocus} from '../../hooks/useRefreshOnFocus';
 import {APP_COLORS} from '../../themes/colors';
 import {SCREEN_WIDTH} from '../../utils/constants';
 import {getRandomColorHex, isURL} from '../../utils/helpers';
@@ -143,20 +144,26 @@ const HomeScreen = () => {
     );
   };
 
-  // useRefreshOnFocus(() => {
-  //   queryClient.invalidateQueries({
-  //     queryKey: [{url: HOME_ENDPOINTS.BREAKFAST}],
-  //   });
-  //   queryClient.invalidateQueries({
-  //     queryKey: [{url: HOME_ENDPOINTS.LUNCH}],
-  //   });
-  //   queryClient.invalidateQueries({
-  //     queryKey: [{url: HOME_ENDPOINTS.DINER}],
-  //   });
-  //   queryClient.invalidateQueries({
-  //     queryKey: [{url: HOME_ENDPOINTS.DIET}],
-  //   });
-  // });
+  useRefreshOnFocus(() => {
+    queryClient.invalidateQueries({
+      queryKey: [{url: HOME_ENDPOINTS.BREAKFAST}],
+    });
+    queryClient.invalidateQueries({
+      queryKey: [{url: HOME_ENDPOINTS.LUNCH}],
+    });
+    queryClient.invalidateQueries({
+      queryKey: [{url: HOME_ENDPOINTS.DINER}],
+    });
+    queryClient.invalidateQueries({
+      queryKey: [{url: HOME_ENDPOINTS.DIET}],
+    });
+    queryClient.invalidateQueries({
+      queryKey: [{url: HOME_ENDPOINTS.RECENT}],
+    });
+    queryClient.invalidateQueries({
+      queryKey: [{url: HOME_ENDPOINTS.TRENDING}],
+    });
+  });
 
   const onIndexChange = tabIndex => {
     setIndex(tabIndex);
@@ -219,7 +226,7 @@ const HomeScreen = () => {
             </View>
             <View style={styles.youCanMakeView}>
               <Text style={styles.youCanMakeTxt} type="bold-32">
-                Here’s what you can make
+                Here’s what you can make ?
               </Text>
             </View>
           </View>
@@ -276,6 +283,7 @@ const HomeScreen = () => {
           <TabView
             key={index}
             navigationState={{index, routes}}
+            lazy // focus that
             swipeEnabled={false}
             renderScene={renderScene}
             onIndexChange={onIndexChange}

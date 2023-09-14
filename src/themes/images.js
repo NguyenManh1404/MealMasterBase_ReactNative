@@ -1,4 +1,5 @@
 import icCaretLeftx24 from '../assets/images/icons/icCaretLeftx24.png';
+import icDelete from '../assets/images/icons/icDelete.png';
 import icEyeClose from '../assets/images/icons/icEyeClose.png';
 import icEyeOpen from '../assets/images/icons/icEyeOpen.png';
 import icHeartCard from '../assets/images/icons/icHeartCard.png';
@@ -16,5 +17,6 @@ const APP_IMAGES = {
   icHeartCard,
   icPlayButton,
   icStar,
+  icDelete,
 };
 export {APP_IMAGES};
