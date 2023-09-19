@@ -30,5 +30,7 @@
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
 	<string>1:785576828659:ios:bb1c0f895d7704efe82186</string>
+	<key>FirebaseAppDelegateProxyEnabled</key>
+	<true></true>
 </dict>
 </plist>

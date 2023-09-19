@@ -5,7 +5,7 @@
 #import <React/RCTRootView.h>
 
 #import <React/RCTAppSetupUtils.h>
-
+#import <Firebase.h>
 #import <FBSDKCoreKit/FBSDKCoreKit.h> 
 #import <RNGoogleSignin/RNGoogleSignin.h>
 
@@ -34,6 +34,7 @@ static NSString *const kRNConcurrentRoot = @"concurrentRoot";
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+  [FIRApp configure];
   [[FBSDKApplicationDelegate sharedInstance] initializeSDK];
   RCTAppSetupPrepareApp(application);
 
