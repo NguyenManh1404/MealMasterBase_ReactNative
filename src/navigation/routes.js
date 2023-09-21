@@ -3,11 +3,13 @@ import Register from '../screens/Authentication/Register';
 import ResetPassword from '../screens/Authentication/ResetPassword';
 import SendCodeVerifyEmail from '../screens/Authentication/SendCodeVerifyEmail';
 import VerifyAccount from '../screens/Authentication/VerifyAccount';
+import ChatScreen from '../screens/Chat';
 import FavoriteScreen from '../screens/Favorite';
 import HomeScreen from '../screens/Home';
 import NotificationScreen from '../screens/Notification';
 import ProfileScreen from '../screens/Profile';
 import RecipeScreen from '../screens/Recipe';
+
 const ROUTES = {
   HomeScreen,
   NotificationScreen,
@@ -19,6 +21,7 @@ const ROUTES = {
   VerifyAccount,
   SendCodeVerifyEmail,
   ResetPassword,
+  ChatScreen,
 };
 
 const ROUTE_NAMES = {
@@ -33,6 +36,7 @@ const ROUTE_NAMES = {
   VerifyAccount: 'VerifyAccount',
   SendCodeVerifyEmail: 'SendCodeVerifyEmail',
   ResetPassword: 'ResetPassword',
+  ChatScreen: 'ChatScreen',
 };
 
 export {ROUTES, ROUTE_NAMES};

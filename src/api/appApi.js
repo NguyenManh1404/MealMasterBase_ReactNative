@@ -17,9 +17,9 @@ console.log(
 
 appApi.interceptors.request.use(async config => {
   const token = await getString(STORAGE_KEYS.TOKEN);
+  console.log('🚀 ~ file: appApi.js:20 ~ token:', token);
   // const token = useSelector(state => state.auth.token);
 
-  console.log('🚀 ~ file: appApi.js:20 ~ token:', token);
   const defaultHeaders = await getAppHeaders();
   config.headers = {
     ...defaultHeaders,

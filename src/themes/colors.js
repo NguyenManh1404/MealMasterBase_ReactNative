@@ -13,5 +13,6 @@ const APP_COLORS = {
   gray: '#808080',
   modalFade: 'rgba(0, 0, 0, 0.5)',
   neutral10: '#F1F1F1',
+  messBackground: '#0084FF',
 };
 export {APP_COLORS};

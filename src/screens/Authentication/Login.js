@@ -1,6 +1,7 @@
+import messaging from '@react-native-firebase/messaging';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {useFormik} from 'formik';
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {StyleSheet, TouchableOpacity, View} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
@@ -15,12 +16,22 @@ import {
 import {useAuthentication} from '../../hooks/useAuthentication';
 import {APP_COLORS} from '../../themes/colors';
 import {SCREEN_WIDTH} from '../../utils/constants';
-
 const Login = () => {
   const {navigate} = useNavigation();
   const {t} = useTranslation();
   const route = useRoute();
   const {email} = route.params || {};
+  const [tokenMessage, setTokenMessage] = useState();
+  console.log('🚀 ~ file: Login.js:25 ~ Login ~ tokenMessage:', tokenMessage);
+
+  useEffect(() => {
+    getToken();
+  }, []);
+
+  const getToken = async () => {
+    const deviceToken = await messaging().getToken();
+    setTokenMessage(deviceToken);
+  };
 
   const {loginFacebook, loginGoogle, loginByEmail, loginByEmailLoading} =
     useAuthentication();
@@ -40,7 +51,7 @@ const Login = () => {
         .required(t('validation.passwordIsRequire')),
     }),
     onSubmit: values => {
-      loginByEmail({...values, tokenDevice: 'demo-token'});
+      loginByEmail({...values, tokenDevice: tokenMessage || 'demo-token'});
     },
   });
 

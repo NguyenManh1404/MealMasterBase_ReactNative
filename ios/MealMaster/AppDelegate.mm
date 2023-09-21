@@ -67,6 +67,10 @@ static NSString *const kRNConcurrentRoot = @"concurrentRoot";
   return YES;
 }
 
+- (void)application:(UIApplication *)application
+  didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
+  [FIRMessaging messaging].APNSToken = deviceToken;
+} 
 
 - (BOOL)application:(UIApplication *)application openURL:(nonnull NSURL *)url options:(nonnull NSDictionary<NSString *,id> *)options {
   return [[FBSDKApplicationDelegate sharedInstance] application:application openURL:url options:options] || [RNGoogleSignin application:application openURL:url options:options];

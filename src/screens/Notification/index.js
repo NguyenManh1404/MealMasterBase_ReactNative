@@ -1,21 +1,23 @@
 import messaging, {firebase} from '@react-native-firebase/messaging';
 import React, {useEffect} from 'react';
-import {Alert, Text} from 'react-native';
+import {Alert, FlatList, StyleSheet} from 'react-native';
 import {
   PERMISSIONS,
   RESULTS,
   openSettings,
   request,
 } from 'react-native-permissions';
-import {SafeAreaContainer} from '../../components';
+
+import {SafeAreaContainer, Text} from '../../components';
 import {IS_IOS} from '../../utils/constants';
 import {showSystemAlert} from '../../utils/helpers';
+import InboxItem from './components/InboxItem';
 
 const requestUserPermission = async () => {
   if (IS_IOS) {
     await messaging().registerDeviceForRemoteMessages();
     const authStatus = await messaging().requestPermission();
-    await messaging().setAPNSToken('DZ2SYPB6FV');
+    // await messaging().setAPNSToken('sdfghj');
     const enabled =
       authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
       authStatus === messaging.AuthorizationStatus.PROVISIONAL;
@@ -50,16 +52,13 @@ const requestUserPermission = async () => {
 export const getToken = async () => {
   try {
     const deviceToken = await messaging().getToken();
-    await console.log(
-      '🚀 ~ file: index.js:20 ~ getToken ~ deviceToken:',
+    console.log(
+      '🚀 ~ file: index.js:18 ~ getToken ~ deviceToken:',
       deviceToken,
     );
     return deviceToken;
     // eslint-disable-next-line no-console
-    // console.log('🚀 ~ file: index.js:18 ~ getToken ~ deviceToken:', deviceToken);
-  } catch (error) {
-    console.log('🚀 ~ file: index.js:29 ~ getToken ~ error:', error);
-  }
+  } catch (error) {}
 };
 
 const NotificationScreen = () => {
@@ -74,13 +73,25 @@ const NotificationScreen = () => {
     return unsubscribe;
   }, []);
 
+  const data = [1, 43, 5, 56, 78, 89, 890, 0, 7];
+
+  const renderItem = ({item, index}) => {
+    return <InboxItem item={item} key={index} />;
+  };
+
   return (
     <SafeAreaContainer>
-      <Text>Notification</Text>
+      <Text type="bold-14">Your Mail Box</Text>
+      <FlatList
+        data={data}
+        renderItem={renderItem}
+        showsVerticalScrollIndicator={false}
+        keyExtractor={(__, index) => `${index}`}
+      />
     </SafeAreaContainer>
   );
 };
 
 export default NotificationScreen;
 
-// const styles = StyleSheet.create({});
+const styles = StyleSheet.create({});

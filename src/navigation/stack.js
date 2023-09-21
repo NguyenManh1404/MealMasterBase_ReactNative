@@ -1,6 +1,7 @@
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import React, {useMemo} from 'react';
 import HeaderBackButton from '../components/HeaderBackButton';
+import ChatScreen from '../screens/Chat';
 import {ROUTES, ROUTE_NAMES} from './routes';
 import BottomTabs from './subStacks/BottomTabs';
 
@@ -28,6 +29,14 @@ const MainNavigator = ({isAbleToGoHome}) => {
       {
         name: ROUTE_NAMES.BottomTabs,
         component: BottomTabs,
+        options: {
+          headerShown: false,
+        },
+      },
+
+      {
+        name: ROUTE_NAMES.ChatScreen,
+        component: ChatScreen,
         options: {
           headerShown: false,
         },
