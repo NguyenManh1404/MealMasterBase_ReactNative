@@ -3,6 +3,7 @@ import appApi from './appApi';
 const CHAT = Object.freeze({
   ADD_NEW_MESSAGE: '/api/chat/add_new_message',
   GET_CHAT_WITH_ID: '/api/chat/get_chat_with_userId/ID',
+  GET_ALL_LIST_CHAT: '/api/chat/get_all_list_chat',
 });
 
 const addNewMessageApi = async data => {

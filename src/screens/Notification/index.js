@@ -1,89 +1,56 @@
-import messaging, {firebase} from '@react-native-firebase/messaging';
+import messaging from '@react-native-firebase/messaging';
+import {useQuery} from '@tanstack/react-query';
 import React, {useEffect} from 'react';
-import {Alert, FlatList, StyleSheet} from 'react-native';
-import {
-  PERMISSIONS,
-  RESULTS,
-  openSettings,
-  request,
-} from 'react-native-permissions';
-
+import {FlatList, StyleSheet, View} from 'react-native';
+import {commonQueryDetailFunction} from '../../api/appApi';
+import {CHAT} from '../../api/chat';
 import {SafeAreaContainer, Text} from '../../components';
-import {IS_IOS} from '../../utils/constants';
-import {showSystemAlert} from '../../utils/helpers';
+import {useRefreshOnFocus} from '../../hooks/useRefreshOnFocus';
 import InboxItem from './components/InboxItem';
 
-const requestUserPermission = async () => {
-  if (IS_IOS) {
-    await messaging().registerDeviceForRemoteMessages();
-    const authStatus = await messaging().requestPermission();
-    // await messaging().setAPNSToken('sdfghj');
-    const enabled =
-      authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
-      authStatus === messaging.AuthorizationStatus.PROVISIONAL;
-
-    if (enabled) {
-      // eslint-disable-next-line no-console
-      console.log('Authorization status:', authStatus);
-    }
-  } else {
-    try {
-      const response = await request(PERMISSIONS.ANDROID.POST_NOTIFICATIONS);
-      if (
-        [RESULTS.BLOCKED, RESULTS.UNAVAILABLE, RESULTS.DENIED].includes(
-          response,
-        )
-      ) {
-        return showSystemAlert({
-          message: error?.message,
-          actions: [
-            {text: 'cancel', onPress: () => {}},
-            {
-              text: 'ok',
-              onPress: openSettings,
-            },
-          ],
-        });
-      }
-    } catch (errors) {}
-  }
-};
-
-export const getToken = async () => {
-  try {
-    const deviceToken = await messaging().getToken();
-    console.log(
-      '🚀 ~ file: index.js:18 ~ getToken ~ deviceToken:',
-      deviceToken,
-    );
-    return deviceToken;
-    // eslint-disable-next-line no-console
-  } catch (error) {}
-};
+// export const getToken = async () => {
+//   try {
 
 const NotificationScreen = () => {
   useEffect(() => {
-    requestUserPermission();
-    firebase.messaging().registerDeviceForRemoteMessages();
-    getToken();
     const unsubscribe = messaging().onMessage(async remoteMessage => {
-      Alert.alert('A new FCM message arrived!', JSON.stringify(remoteMessage));
+      refetch();
     });
-
     return unsubscribe;
   }, []);
 
-  const data = [1, 43, 5, 56, 78, 89, 890, 0, 7];
+  const {
+    data: listChats,
+    isLoading: isFetchingListChats,
+    refetch,
+  } = useQuery({
+    queryKey: [{url: CHAT.GET_ALL_LIST_CHAT}],
+    queryFn: commonQueryDetailFunction,
+    onSuccess: data => {
+      console.log('gọi list');
+    },
+    select: res => {
+      return res?.data;
+    },
+    // refetchInterval: 5000,
+  });
+
+  useRefreshOnFocus(() => {
+    refetch();
+  });
 
   const renderItem = ({item, index}) => {
     return <InboxItem item={item} key={index} />;
   };
 
   return (
-    <SafeAreaContainer>
-      <Text type="bold-14">Your Mail Box</Text>
+    <SafeAreaContainer loading={isFetchingListChats}>
+      <View style={styles.header}>
+        <Text type="bold-15">Your Mail Box</Text>
+      </View>
+
       <FlatList
-        data={data}
+        data={listChats || []}
         renderItem={renderItem}
         showsVerticalScrollIndicator={false}
         keyExtractor={(__, index) => `${index}`}
@@ -94,4 +61,9 @@ const NotificationScreen = () => {
 
 export default NotificationScreen;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  header: {
+    alignSelf: 'center',
+    padding: 20,
+  },
+});

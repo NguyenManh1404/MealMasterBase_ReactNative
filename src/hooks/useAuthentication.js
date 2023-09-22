@@ -26,8 +26,8 @@ const useAuthentication = () => {
 
   const {mutateAsync: registerAccount, isLoading: registerAccountLoading} =
     useMutation(registerAccountApi, {
-      onSuccess: ({email}) => {
-        navigate('VerifyAccount', {email});
+      onSuccess: res => {
+        navigate('VerifyAccount', {email: res?.data?.email});
       },
       onError: error => {
         showSystemAlert({

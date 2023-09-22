@@ -187,7 +187,7 @@ const RecipeScreen = () => {
           onBlur={formik.handleBlur('name')}
           error={formik.errors.name}
           defaultValue={formik.values.name}
-          autoFocus={true}
+          //  autoFocus={true}
           placeholder={'Enter Name Of Recipe'}
           placeholderTextColor={APP_COLORS.gray}
           label={'Enter Name Of Recipe'}
