@@ -79,7 +79,7 @@ const BottomTabs = () => {
         name: ROUTE_NAMES.NotificationScreen,
         component: ROUTES.NotificationScreen,
         options: {
-          tabBarLabel: t('bottomTab.notification'),
+          tabBarLabel: t('bottomTab.mailbox'),
           tabBarIcon: ({color, focused}) => (
             <MaterialCommunityIcons
               name={focused ? 'bell' : 'bell-outline'}

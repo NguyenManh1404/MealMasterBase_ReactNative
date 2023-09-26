@@ -36,13 +36,16 @@ export default RecentRecipe;
 
 const styles = StyleSheet.create({
   imageCardRecentView: {
-    width: 124,
     height: 124,
+    width: 124,
     resizeMode: 'cover',
     borderRadius: 10,
   },
   recentRecipeView: {
-    width: 124,
+    width: 150,
     marginRight: 16,
+    backgroundColor: APP_COLORS.white,
+    padding: 10,
+    borderRadius: 5,
   },
 });

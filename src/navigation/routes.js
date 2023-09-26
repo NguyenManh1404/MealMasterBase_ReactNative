@@ -8,6 +8,7 @@ import FavoriteScreen from '../screens/Favorite';
 import HomeScreen from '../screens/Home';
 import NotificationScreen from '../screens/Notification';
 import ProfileScreen from '../screens/Profile';
+import EditProfile from '../screens/Profile/EditProfile';
 import RecipeScreen from '../screens/Recipe';
 
 const ROUTES = {
@@ -22,6 +23,7 @@ const ROUTES = {
   SendCodeVerifyEmail,
   ResetPassword,
   ChatScreen,
+  EditProfile,
 };
 
 const ROUTE_NAMES = {
@@ -37,6 +39,7 @@ const ROUTE_NAMES = {
   SendCodeVerifyEmail: 'SendCodeVerifyEmail',
   ResetPassword: 'ResetPassword',
   ChatScreen: 'ChatScreen',
+  EditProfile: 'EditProfile',
 };
 
 export {ROUTES, ROUTE_NAMES};

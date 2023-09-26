@@ -84,6 +84,8 @@ const CATEGORY = [
   {id: 4, label: 'Diet', value: 'Diet'},
 ];
 
+const PHONE_VALID =
+  /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
 export {
   API_TIMEOUT,
   APP_THEME,
@@ -101,6 +103,7 @@ export {
   IS_ANDROID,
   IS_IOS,
   LANGUAGE_KEY,
+  PHONE_VALID,
   PHOTO_PERMISSION_STRING,
   PICKER_METHOD,
   SCREEN_HEIGHT,

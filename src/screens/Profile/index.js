@@ -1,6 +1,6 @@
-import i18next from 'i18next';
-import React, {useState} from 'react';
-import {useTranslation} from 'react-i18next';
+import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
+import {useNavigation} from '@react-navigation/native';
+import React from 'react';
 import {
   Image,
   ScrollView,
@@ -8,161 +8,130 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {
-  Avatar,
-  Banner,
-  Button,
-  Card,
-  IconButton,
-  Searchbar,
-  Tooltip,
-} from 'react-native-paper';
-import Icon from 'react-native-vector-icons/FontAwesome5';
+import Config from 'react-native-config';
 import {useDispatch, useSelector} from 'react-redux';
-import LocalImage from '../../components/LocalImage';
+import {LocalImage} from '../../components';
 import WSafeAreaView from '../../components/SafeAreaContainer';
 import Text from '../../components/Text';
-import {useAppMode} from '../../hooks/useAppMode';
-import {setLanguage as setLanguageRedux} from '../../redux/AppRedux';
-import {clearUser, setUser} from '../../redux/AuthRedux';
+import {setUser} from '../../redux/AuthRedux';
 import {APP_COLORS} from '../../themes/colors';
-import {getRandomColorHex} from '../../utils/helpers';
+import {getRandomColorHex, isURL} from '../../utils/helpers';
 
 const ProfileScreen = () => {
-  const [visible, setVisible] = useState(true);
-  const [searchQuery, setSearchQuery] = useState('');
-  const app = useSelector(state => state.app);
   const userInfo = useSelector(state => state.auth.userInfo);
-  const {isLightMode, onSelectAppMode} = useAppMode();
+
+  const {navigate} = useNavigation();
 
   const dispatch = useDispatch();
+  const getRandomColorHe = getRandomColorHex();
 
-  const changeUser = () => {
-    dispatch(setUser({name: 'Mo Yeu Giau'}));
-  };
-  const clearUsers = () => {
-    dispatch(clearUser());
-  };
-  const [language, setLanguage] = useState('en');
+  const Tab = createMaterialTopTabNavigator();
 
-  const {t} = useTranslation();
-
-  const updateLanguage = async selectedLanguage => {
-    if (selectedLanguage) {
-      await dispatch(setLanguageRedux(language));
-      setLanguage(language === 'vi' ? 'en' : 'vi');
-      i18next.changeLanguage(language);
-    }
+  const Posts = () => {
+    return (
+      <View style={styles.tabContainer}>
+        <Text> Post</Text>
+      </View>
+    );
   };
 
-  const onChangeSearch = query => setSearchQuery(query);
+  const About = () => {
+    return (
+      <View style={styles.tabContainer}>
+        <Text> About</Text>
+      </View>
+    );
+  };
 
-  const LeftContent = props => <Avatar.Icon {...props} icon="folder" />;
   return (
     <WSafeAreaView>
-      <ScrollView>
-        <Searchbar
-          placeholder="Search"
-          onChangeText={onChangeSearch}
-          value={searchQuery}
-        />
-        <Text type="bold-25">
-          HomeScreen
-          {userInfo?.firstName}
-        </Text>
-        <Text>{app.language}</Text>
-        <Text>{t('onboarding.hello')}</Text>
-
-        <Icon.Button
-          name="user"
-          onPress={changeUser}
-          solid
-          theme={{dark: true}}>
-          Change User
-        </Icon.Button>
-
-        <Icon.Button name="user" onPress={clearUsers} solid>
-          Clear User
-        </Icon.Button>
-
-        <Icon.Button name="facebook" onPress={updateLanguage} solid>
-          Change Language
-        </Icon.Button>
-
-        <TouchableOpacity onPress={onSelectAppMode}>
-          <Text>Change Themes: {isLightMode ? 'light' : 'Dark'}</Text>
-        </TouchableOpacity>
-
-        <Avatar.Icon size={24} icon="folder" color="yellow" />
-        <Icon name="rocket" size={30} color="#900" solid />
-        <Button
-          onPress={() => {
-            dispatch(setUser(null));
-          }}>
-          <Text>Logout</Text>
-        </Button>
-
-        <Banner
-          theme={{dark: true}}
-          visible={visible}
-          actions={[
-            {
-              label: 'Fix it',
-              onPress: () => setVisible(false),
-            },
-            {
-              label: 'Learn more',
-              onPress: () => setVisible(false),
-            },
-          ]}
-          icon={({size}) =>
-            userInfo?.avatar ? (
-              <Image
-                source={{
-                  uri: userInfo?.avatar,
-                }}
-                style={{
-                  width: size,
-                  height: size,
-                }}
-              />
-            ) : (
-              <View
-                style={[
-                  styles.defaultAvatar,
-                  {backgroundColor: getRandomColorHex()},
-                ]}>
-                <Text type={'bold-20'} color={APP_COLORS.white}>
-                  {userInfo?.firstName?.charAt(0)?.toUpperCase()}
+      <ScrollView style={styles.container}>
+        <View style={styles.header}>
+          <Text type="bold-20">My Profile</Text>
+          <TouchableOpacity
+            onPress={() => {
+              dispatch(setUser(null));
+            }}>
+            <LocalImage imageKey={'icBookMark'} style={styles.imageBlobHome} />
+          </TouchableOpacity>
+        </View>
+        <View style={styles.userView}>
+          <View style={styles.detailName}>
+            <View style={styles.userView}>
+              {userInfo?.avatar ? (
+                <Image
+                  source={{
+                    uri: isURL(userInfo?.avatar)
+                      ? userInfo?.avatar
+                      : `${Config.BASE_URL_API}/public/${userInfo?.avatar}`,
+                  }}
+                  style={styles.defaultAvatar}
+                />
+              ) : (
+                <View
+                  style={[
+                    styles.defaultAvatar,
+                    {backgroundColor: getRandomColorHe},
+                  ]}>
+                  <Text type={'bold-20'} color={APP_COLORS.white}>
+                    {userInfo?.firstName?.charAt(0)?.toUpperCase()}
+                  </Text>
+                </View>
+              )}
+              <Text style={styles.userName} type="bold-16">
+                {userInfo.firstName} {userInfo.lastName && userInfo.lastName}
+              </Text>
+            </View>
+            <View style={styles.numberReceip}>
+              <View style={styles.list}>
+                <Text type={'bold-16'} style={styles.listItem}>
+                  Recipes
                 </Text>
+                <Text style={styles.listItem}>10</Text>
               </View>
-            )
-          }>
-          <Text variant="titleLarge">Card title</Text>
-          There was a problem processing a transaction on your credit card.
-        </Banner>
-        <LocalImage imageKey={'logo'} />
+              <View style={styles.list}>
+                <Text type={'bold-16'} style={styles.listItem}>
+                  Following
+                </Text>
+                <Text style={styles.listItem}>20</Text>
+              </View>
+              <View style={styles.list}>
+                <Text type={'bold-16'} style={styles.listItem}>
+                  Followers
+                </Text>
+                <Text style={styles.listItem}>2</Text>
+              </View>
+            </View>
+          </View>
+          <View style={styles.textname}>
+            <Text style={styles.userName} type="bold-16">
+              {/* {userData?.firstName} {userData?.lastName && userData?.lastName} */}
+            </Text>
+          </View>
+        </View>
 
-        <Card>
-          <Card.Title
-            title="Card Title"
-            subtitle="Card Subtitle"
-            left={LeftContent}
-          />
-          <Card.Content>
-            <Text variant="titleLarge">Card title</Text>
-            <Text variant="bodyMedium">Card content</Text>
-          </Card.Content>
-          <Card.Cover source={{uri: 'https://picsum.photos/700'}} />
-          <Card.Actions>
-            <Button>Cancel</Button>
-            <Button>Ok</Button>
-          </Card.Actions>
-        </Card>
-
-        <Tooltip title="Selected Camera">
-          <IconButton icon="camera" selected size={24} onPress={() => {}} />
-        </Tooltip>
+        <View style={styles.BtnEditProfile}>
+          <TouchableOpacity
+            onPress={() => {
+              navigate('EditProfile', {userData: userInfo});
+            }}>
+            <View style={styles.viewEditProfile}>
+              <Text type="bold-14" style={styles.TextEditProfile}>
+                Edit Profile
+              </Text>
+            </View>
+          </TouchableOpacity>
+        </View>
+        <View>
+          <Tab.Navigator
+            style={styles.tabContainer}
+            screenOptions={{
+              tabBarIndicatorStyle: {backgroundColor: APP_COLORS.primary},
+            }}>
+            <Tab.Screen name="Posts" component={Posts} />
+            <Tab.Screen name="About" component={About} />
+          </Tab.Navigator>
+        </View>
       </ScrollView>
     </WSafeAreaView>
   );
@@ -171,12 +140,74 @@ const ProfileScreen = () => {
 export default ProfileScreen;
 
 const styles = StyleSheet.create({
+  container: {
+    padding: 10,
+  },
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 20,
+  },
+  imageBlobHome: {
+    width: 30,
+    height: 30,
+    marginRight: 10,
+  },
+  detailName: {
+    flexDirection: 'row',
+  },
+  list: {
+    width: 80,
+    height: 70,
+    alignItems: 'center',
+    justifyContent: 'space-around',
+  },
+  listItem: {
+    color: APP_COLORS.black,
+    justifyContent: 'space-between',
+  },
+  userName: {
+    marginLeft: 20,
+    fontWeight: 'bold',
+    marginTop: 10,
+    color: APP_COLORS.black,
+  },
+  numberReceip: {
+    flexDirection: 'row',
+    marginLeft: 20,
+  },
+  userView: {
+    alignItems: 'center',
+  },
   defaultAvatar: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
+    width: 50,
+    height: 50,
+    borderRadius: 25,
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: APP_COLORS.blue,
+  },
+  tabContainer: {
+    minHeight: 100,
+    backgroundColor: APP_COLORS.white,
+  },
+
+  BtnEditProfile: {
+    marginBottom: 20,
+    justifyContent: 'center',
+  },
+  viewEditProfile: {
+    height: 40,
+    borderRadius: 5,
+    borderColor: APP_COLORS.greyL2,
+    borderWidth: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  TextEditProfile: {
+    fontWeight: 'bold',
+    fontSize: 14,
+    letterSpacing: 1,
+    opacity: 0.8,
   },
 });

@@ -21,6 +21,7 @@
     "@react-native-firebase/messaging": "^18.4.0",
     "@react-native-google-signin/google-signin": "^10.0.1",
     "@react-navigation/bottom-tabs": "^6.5.8",
+    "@react-navigation/material-top-tabs": "^6.6.4",
     "@react-navigation/native": "^6.1.7",
     "@react-navigation/native-stack": "^6.9.13",
     "@reduxjs/toolkit": "^1.9.5",
