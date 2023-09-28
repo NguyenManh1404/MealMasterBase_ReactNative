@@ -1606,6 +1606,17 @@ const loginApple = async () => {
 
 # Use react-query to call api
 
+https://codestus.com/posts/su-dung-react-query-de-fetch-du-lieu
+
+## Điểm mạnh;
+
+- Clean code;
+- Tự động cập nhật data của API bên dưới, giúp data luôn mới và đồng bộ với server;
+- Hạn chế gọi nhiều request trùng nhau;
+- Làm cho ứng dụng của bạn dễ bảo trì hơn và dễ dàng xây dựng các tính năng mới hơn;
+- làm cho ứng dụng của bạn cảm thấy nhanh hơn và phản hồi nhanh hơn bao giờ hết;
+- Có khả năng giúp bạn tiết kiệm băng thông và tăng hiệu suất bộ nhớ
+
 1. Install library
 
 ```js
@@ -1967,6 +1978,139 @@ const Login = () => {
 };
 
 export default Login;
+```
+
+## API Reference
+
+1. **useQuery**
+
+- Dùng để get data;
+
+**Các prop và biến sau khi được truyền vào useQuery có mục đích cung cấp cấu hình cho truy vấn sử dụng thư viện React Query. Dưới đây là giải thích cho từng prop và biến này:**
+
+- data: Dữ liệu trả về từ truy vấn (nếu thành công).
+- dataUpdatedAt: Thời điểm cập nhật dữ liệu lần cuối.
+- error: Một lỗi nếu truy vấn không thành công.
+- errorUpdateCount: Số lần cập nhật lỗi.
+- errorUpdatedAt: Thời điểm cập nhật lỗi lần cuối.
+- failureCount: Số lần truy vấn thất bại.
+- failureReason: Nguyên nhân thất bại của truy vấn (nếu có).
+- fetchStatus: Trạng thái tải dữ liệu (loading, success, error, etc.).
+- isError: Kiểm tra xem truy vấn có gặp lỗi hay không.
+- isFetched: Kiểm tra xem dữ liệu đã được tải thành công hay chưa.
+- isFetchedAfterMount: Kiểm tra xem dữ liệu đã được tải thành công sau khi gắn kết component hay chưa.
+- isFetching: Kiểm tra xem truy vấn đang trong quá trình tải dữ liệu hay không.
+- isInitialLoading: Kiểm tra xem trang đã tải lần đầu tiên hay chưa.
+- isLoading: Kiểm tra xem truy vấn đang trong quá trình tải dữ liệu hay không.
+- isLoadingError: Kiểm tra xem có lỗi xảy ra trong quá trình tải dữ liệu hay không.
+- isPaused: Kiểm tra xem truy vấn đã bị tạm dừng hay không.
+- isPlaceholderData: Kiểm tra xem dữ liệu placeholder đang được sử dụng hay không.
+- isPreviousData: Kiểm tra xem dữ liệu trước đó có sẵn hay không.
+- isRefetchError: Kiểm tra xem có lỗi xảy ra trong quá trình làm mới truy vấn hay không.
+- isRefetching: Kiểm tra xem truy vấn đang trong quá trình làm mới hay không.
+- isStale: Kiểm tra xem dữ liệu đã lỗi thời hay không.
+- isSuccess: Kiểm tra xem truy vấn đã thành công hay không.
+- refetch: Hàm để làm mới truy vấn bằng cách gọi nó.
+- remove: Hàm để loại bỏ truy vấn khỏi cache.
+- status: Trạng thái tải dữ liệu (loading, success, error, etc.).
+
+**Các funtion của useQuery:**
+
+- queryKey: Mảng chứa các tham số mô tả truy vấn, ví dụ như URL hoặc các tham số truy vấn. Thay đổi giá trị này sẽ làm cho React Query hiểu rằng truy vấn cần được làm mới.
+
+- queryFn: Hàm thực thi truy vấn. Nó có thể là một hàm hoặc một promise trả về dữ liệu truy vấn.
+
+- cacheTime: Thời gian mà dữ liệu sẽ được lưu trữ trong cache trước khi bị coi là "lỗi thời".
+
+- enabled: Một giá trị boolean xác định xem truy vấn có nên được thực hiện ngay lập tức sau khi component được gắn kết hay không.
+
+- networkMode: Chế độ tải dữ liệu, ví dụ như "online", "offline", hoặc "cache-first".
+
+- initialData: Dữ liệu ban đầu được sử dụng trước khi truy vấn được thực hiện.
+
+- initialDataUpdatedAt: Thời điểm cập nhật dữ liệu ban đầu.
+
+- keepPreviousData: Giữ lại dữ liệu trước đó khi làm mới truy vấn.
+
+- meta: Dữ liệu meta để lưu trữ thông tin bổ sung về truy vấn.
+
+- notifyOnChangeProps: Mảng các props để theo dõi và thông báo sự thay đổi của chúng đối với truy vấn.
+
+- onError: Hàm callback được gọi khi truy vấn gặp lỗi.
+
+- onSettled: Hàm callback được gọi sau khi truy vấn hoàn thành hoặc gặp lỗi.
+
+- onSuccess: Hàm callback được gọi khi truy vấn thành công.
+
+- placeholderData: Dữ liệu sẽ được sử dụng khi truy vấn đang trong quá trình tải.
+
+- queryKeyHashFn: Hàm để tính toán mã băm cho queryKey.
+
+- refetchInterval: Khoảng thời gian giữa các lần làm mới truy vấn tự động.
+
+- refetchIntervalInBackground: Khoảng thời gian giữa các lần làm mới truy vấn tự động khi ứng dụng đang chạy ở nền.
+
+- refetchOnMount: Làm mới truy vấn tự động khi component được gắn kết.
+
+- refetchOnReconnect: Làm mới truy vấn tự động khi kết nối mạng được thiết lập lại.
+
+- refetchOnWindowFocus: Làm mới truy vấn tự động khi cửa sổ ứng dụng được tập trung.
+
+- retry: Số lần thử lại truy vấn nếu nó gặp lỗi.
+
+- retryOnMount: Thử lại truy vấn tự động khi component được gắn kết.
+
+- retryDelay: Khoảng thời gian giữa các lần thử lại truy vấn.
+
+- select: Hàm để lựa chọn dữ liệu từ kết quả truy vấn.
+
+- staleTime: Thời gian mà dữ liệu được coi là còn hợp lệ trong cache sau khi nó đã được tải.
+
+- structuralSharing: Cho phép chia sẻ dữ liệu cache giữa các truy vấn có cùng queryKey.
+
+- suspense: Cho phép chế độ Suspense cho truy vấn.
+
+- useErrorBoundary: Sử dụng React Error Boundary để bắt lỗi trong truy vấn.
+
+2. **queryClient.invalidateQueries({})**
+
+- Fecth lại data sau khi thực hiện useMutation
+
+- phương thức đánh dấu một truy vấn cho một khóa làm cho Truy vấn React tìm nạp lại dữ liệu đó. Bạn có thể sử dụng phương pháp đó trong hook useMutation sau khi cập nhật thành công.
+- Example:
+
+```js
+import React from 'react';
+import {useQueryClient} from 'react-query';
+import {HOME_ENDPOINTS} from 'your-api-constants';
+
+function YourComponent() {
+  const queryClient = useQueryClient();
+
+  const {data: listRecipeTrending, isLoading: isFechingTrending} = useQuery({
+    queryKey: [{url: HOME_ENDPOINTS.TRENDING}],
+    queryFn: commonQueryDetailFunction,
+    select: res => {
+      return res.updatedTopRecipes;
+    },
+  });
+
+  const handleInvalidateQuery = () => {
+    // gọi để làm mới giữ liệu
+    queryClient.invalidateQueries({
+      queryKey: [{url: HOME_ENDPOINTS.TRENDING}],
+    });
+  };
+
+  return (
+    <View>
+      <Button onClick={handleInvalidateQuery}>Làm mới dữ liệu</Button>
+      {listRecipeTrending}
+    </View>
+  );
+}
+
+export default YourComponent;
 ```
 
 </details>
