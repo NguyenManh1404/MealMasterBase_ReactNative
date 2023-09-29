@@ -1,117 +1,141 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow strict-local
- */
-
-import React from 'react';
-import type {Node} from 'react';
 import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
+  QueryClient,
+  QueryClientProvider,
+  useMutation,
+  useQuery,
+} from '@tanstack/react-query';
+import axios from 'axios';
+import React from 'react';
+import {
+  Button,
+  FlatList,
+  Image,
+  RefreshControl,
   StyleSheet,
   Text,
-  useColorScheme,
   View,
 } from 'react-native';
 
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+const User = () => {
+  //Fetch list
+  async function fetchUsers() {
+    const response = await axios.get(
+      'https://6514fb42dc3282a6a3cdb0e1.mockapi.io/users',
+    );
+    return response?.data;
+  }
 
-/* $FlowFixMe[missing-local-annot] The type annotation(s) required by Flow's
- * LTI update could not be added via codemod */
-const Section = ({children, title}): Node => {
-  const isDarkMode = useColorScheme() === 'dark';
+  //Delete users
+
+  async function deleteUserById(id) {
+    const response = await axios.delete(
+      `https://6514fb42dc3282a6a3cdb0e1.mockapi.io/users/${id}`,
+    );
+    return response?.data;
+  }
+
+  //Create
+  async function createUsers() {
+    const data = {
+      name: 'manh 123',
+    };
+    const response = await axios.post(
+      'https://6514fb42dc3282a6a3cdb0e1.mockapi.io/users',
+      data,
+    );
+    refetch();
+  }
+
+  const {data, error, isLoading, status, isFetching, refetch} = useQuery({
+    queryKey: ['users'],
+    queryFn: fetchUsers,
+    cacheTime: 0,
+    refetchOnReconnect: 'always',
+    // refetchInterval: 2000,
+  });
+
+  const {mutateAsync: DeleteUser} = useMutation(deleteUserById, {
+    onSuccess: () => {
+      refetch();
+    },
+  });
+
   return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
+    <View style={styles.container}>
+      <View style={styles.header}>
+        <Text style={styles.title}>User List {status} </Text>
+        {isFetching ? <Text>Fetching</Text> : <Text>Fetched</Text>}
+        <Button title="AddNew" onPress={createUsers} color="green" />
+      </View>
+
+      {isLoading ? (
+        <Text>Loading...</Text>
+      ) : error ? (
+        <Text>Error: {error.message}</Text>
+      ) : (
+        <FlatList
+          data={data}
+          refreshControl={
+            <RefreshControl refreshing={isLoading} onRefresh={refetch} />
+          }
+          keyExtractor={item => item.id}
+          renderItem={({item}) => (
+            <View style={styles.userContainer}>
+              <Image source={{uri: item.avatar}} style={styles.avatar} />
+              <Text>{item.name}</Text>
+              <Button
+                title="Delete"
+                onPress={() => DeleteUser(item.id)}
+                color="red"
+              />
+            </View>
+          )}
+        />
+      )}
     </View>
   );
 };
 
-const App: () => Node = () => {
-  const isDarkMode = useColorScheme() === 'dark';
-
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-  };
+const App = () => {
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        retry: 3,
+        staleTime: 60 * 1000,
+      },
+    },
+  });
 
   return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={backgroundStyle.backgroundColor}
-      />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <Header />
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.js</Text> to change this
-            screen and then come back to see your edits.
-          </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
-        </View>
-      </ScrollView>
-    </SafeAreaView>
+    <QueryClientProvider client={queryClient}>
+      <User />
+    </QueryClientProvider>
   );
 };
 
+export default App;
+
 const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
+  container: {
+    flex: 1,
+    justifyContent: 'center',
   },
-  sectionTitle: {
+  header: {},
+  title: {
     fontSize: 24,
-    fontWeight: '600',
+    marginBottom: 16,
   },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
+  userContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginVertical: 8,
+    justifyContent: 'space-between',
+    paddingHorizontal: 20,
   },
-  highlight: {
-    fontWeight: '700',
+  avatar: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    marginRight: 8,
   },
 });
-
-export default App;
