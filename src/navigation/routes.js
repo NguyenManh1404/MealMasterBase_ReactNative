@@ -11,6 +11,7 @@ import NotificationScreen from '../screens/Notification';
 import ProfileScreen from '../screens/Profile';
 import EditProfile from '../screens/Profile/EditProfile';
 import RecipeScreen from '../screens/Recipe';
+import EditRecipe from '../screens/Recipe/EditRecipe';
 
 import DetailRecipe from '../screens/DetailRecipe';
 const ROUTES = {
@@ -28,6 +29,7 @@ const ROUTES = {
   EditProfile,
   DetailRecipe,
   ViewImage,
+  EditRecipe,
 };
 
 const ROUTE_NAMES = {
@@ -46,6 +48,7 @@ const ROUTE_NAMES = {
   EditProfile: 'EditProfile',
   DetailRecipe: 'DetailRecipe',
   ViewImage: 'ViewImage',
+  EditRecipe: 'EditRecipe',
 };
 
 export {ROUTES, ROUTE_NAMES};

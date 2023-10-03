@@ -16,5 +16,6 @@ const APP_COLORS = {
   messBackground: '#0084FF',
   modalFadeModify: 'rgba(0, 0, 0, 0.3)',
   grayModify: '#F1F3F5',
+  grayChatBackground: '#f0f2f5',
 };
 export {APP_COLORS};

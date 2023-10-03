@@ -20,13 +20,14 @@ import {commonQueryDetailFunction} from '../../api/appApi';
 import {CHAT, addNewMessageApi} from '../../api/chat';
 import {LocalImage, SafeAreaContainer, Text} from '../../components';
 import {useMediaPicker} from '../../hooks/useMediaPicker';
+import {ROUTE_NAMES} from '../../navigation/routes';
 import {APP_COLORS} from '../../themes/colors';
 import {SCREEN_WIDTH} from '../../utils/constants';
-import {showSystemAlert} from '../../utils/helpers';
+import {isEmpty, showSystemAlert} from '../../utils/helpers';
 
 const ChatScreen = () => {
   const route = useRoute();
-  const {goBack} = useNavigation();
+  const {goBack, navigate} = useNavigation();
   const {idUserReceive} = route.params || {};
 
   const [content, setContent] = useState();
@@ -92,8 +93,7 @@ const ChatScreen = () => {
     textInputRef.current?.clear();
     setContent();
     setImages([]);
-
-    if (content) {
+    if (!isEmpty(content) || !isEmpty(images)) {
       addNewMessage({
         idUserReceive: idUserReceive,
         content: content,
@@ -103,6 +103,7 @@ const ChatScreen = () => {
   };
 
   const ChatItem = ({item}) => {
+    const displayedImages = item?.images.slice(0, 2);
     return (
       <View style={styles.messageContent}>
         {item?.senderId === userInfo?._id ? (
@@ -112,16 +113,32 @@ const ChatScreen = () => {
                 {item?.content}
               </Text>
               <View style={styles.viewAddImage}>
-                {item?.images.map((image, index) => {
+                {displayedImages.map((image, index) => {
+                  const onPressImage = _index => () => {
+                    navigate(ROUTE_NAMES.ViewImage, {
+                      data: item?.images,
+                      defaultIndex: _index,
+                    });
+                  };
                   return (
-                    <View key={index} style={styles.imageItem}>
+                    <TouchableOpacity
+                      key={index}
+                      style={styles.imageItem}
+                      onPress={onPressImage(index)}>
                       <Image
                         source={{
                           uri: `${Config.BASE_URL_API}/public/${image}`,
                         }}
                         style={styles.imageFood2}
                       />
-                    </View>
+                      {index === 1 && item?.images.length > 2 && (
+                        <View style={styles.viewNumberMoreImage}>
+                          <Text type="bold-24" color={APP_COLORS.white}>
+                            {item?.images.length - 2} +
+                          </Text>
+                        </View>
+                      )}
+                    </TouchableOpacity>
                   );
                 })}
               </View>
@@ -130,20 +147,36 @@ const ChatScreen = () => {
         ) : (
           <View style={styles.leftMessage}>
             <View style={styles.itemLeftMessage}>
-              <Text style={styles.txtLeftMessage} color={APP_COLORS.white}>
+              <Text style={styles.txtLeftMessage} color={APP_COLORS.black}>
                 {item?.content}
               </Text>
               <View style={styles.viewAddImage}>
-                {item?.images.map((image, index) => {
+                {displayedImages.map((image, index) => {
+                  const onPressImage = _index => () => {
+                    navigate(ROUTE_NAMES.ViewImage, {
+                      data: item?.images,
+                      defaultIndex: _index,
+                    });
+                  };
                   return (
-                    <View key={index} style={styles.imageItem}>
+                    <TouchableOpacity
+                      key={index}
+                      style={styles.imageItem}
+                      onPress={onPressImage(index)}>
                       <Image
                         source={{
                           uri: `${Config.BASE_URL_API}/public/${image}`,
                         }}
                         style={styles.imageFood2}
                       />
-                    </View>
+                      {index === 1 && item?.images.length > 2 && (
+                        <View style={styles.viewNumberMoreImage}>
+                          <Text type="bold-24" color={APP_COLORS.white}>
+                            {item?.images.length - 2} +
+                          </Text>
+                        </View>
+                      )}
+                    </TouchableOpacity>
                   );
                 })}
               </View>
@@ -268,7 +301,7 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-start',
   },
   itemLeftMessage: {
-    backgroundColor: APP_COLORS.greyL2,
+    backgroundColor: APP_COLORS.white,
     padding: 10,
     borderRadius: 10,
     marginVertical: 10,
@@ -341,4 +374,13 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
   },
   backIconLogin: {width: 25, height: 25},
+  viewNumberMoreImage: {
+    position: 'absolute',
+    height: 100,
+    width: 100,
+    backgroundColor: APP_COLORS.modalFadeModify,
+    borderRadius: 5,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
 });

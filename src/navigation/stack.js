@@ -5,6 +5,7 @@ import ViewImage from '../components/ViewImage';
 import ChatScreen from '../screens/Chat';
 import DetailRecipe from '../screens/DetailRecipe';
 import EditProfile from '../screens/Profile/EditProfile';
+import EditRecipe from '../screens/Recipe/EditRecipe';
 import {ROUTES, ROUTE_NAMES} from './routes';
 import BottomTabs from './subStacks/BottomTabs';
 
@@ -63,6 +64,13 @@ const MainNavigator = ({isAbleToGoHome}) => {
       {
         name: ROUTE_NAMES.ViewImage,
         component: ViewImage,
+        options: {
+          headerShown: false,
+        },
+      },
+      {
+        name: ROUTE_NAMES.EditRecipe,
+        component: EditRecipe,
         options: {
           headerShown: false,
         },

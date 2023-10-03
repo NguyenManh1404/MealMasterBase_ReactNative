@@ -13,10 +13,7 @@ const DetailRecipeTabView = ({recipeInfo}) => {
 
   const updateTabHeight = event => {
     const {height} = event.nativeEvent.layout;
-
-    if (tabPageHeight === 0) {
-      setTabPageHeight(height);
-    }
+    setTabPageHeight(height);
   };
   return (
     <Tab.Navigator

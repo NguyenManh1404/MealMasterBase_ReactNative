@@ -1,6 +1,6 @@
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import {useNavigation} from '@react-navigation/native';
-import React from 'react';
+import React, {useState} from 'react';
 import {
   Image,
   ScrollView,
@@ -16,9 +16,11 @@ import Text from '../../components/Text';
 import {setUser} from '../../redux/AuthRedux';
 import {APP_COLORS} from '../../themes/colors';
 import {getRandomColorHex, isURL} from '../../utils/helpers';
+import YourRecipes from './components/YourRecipes';
 
 const ProfileScreen = () => {
   const userInfo = useSelector(state => state.auth.userInfo);
+  const [tabPageHeight, setTabPageHeight] = useState(0);
 
   const {navigate} = useNavigation();
 
@@ -27,20 +29,18 @@ const ProfileScreen = () => {
 
   const Tab = createMaterialTopTabNavigator();
 
-  const Posts = () => {
-    return (
-      <View style={styles.tabContainer}>
-        <Text> Post</Text>
-      </View>
-    );
-  };
-
   const About = () => {
     return (
       <View style={styles.tabContainer}>
         <Text> About</Text>
       </View>
     );
+  };
+
+  const updateTabHeight = event => {
+    const {height} = event.nativeEvent.layout;
+
+    setTabPageHeight(height);
   };
 
   return (
@@ -124,11 +124,17 @@ const ProfileScreen = () => {
         </View>
         <View>
           <Tab.Navigator
-            style={styles.tabContainer}
+            style={[styles.tabContainer, {height: tabPageHeight + 100}]}
             screenOptions={{
               tabBarIndicatorStyle: {backgroundColor: APP_COLORS.primary},
+              tabBarActiveTintColor: APP_COLORS.primary,
             }}>
-            <Tab.Screen name="Posts" component={Posts} />
+            <Tab.Screen
+              name="Your Recipes"
+              children={props => (
+                <YourRecipes {...props} updateTabHeight={updateTabHeight} />
+              )}
+            />
             <Tab.Screen name="About" component={About} />
           </Tab.Navigator>
         </View>
@@ -142,6 +148,7 @@ export default ProfileScreen;
 const styles = StyleSheet.create({
   container: {
     padding: 10,
+    flexGrow: 1,
   },
   header: {
     flexDirection: 'row',

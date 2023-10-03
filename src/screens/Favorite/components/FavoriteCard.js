@@ -36,7 +36,7 @@ const FavoriteCard = ({item}) => {
     <TouchableOpacity
       style={styles.viewCard}
       onPress={() => {
-        navigate('DetailRecipe');
+        navigate('DetailRecipe', {id: item._id});
       }}>
       <Image
         source={{
@@ -52,7 +52,7 @@ const FavoriteCard = ({item}) => {
       </TouchableOpacity>
 
       <View style={styles.viewTitle}>
-        <Text type={'bold-20'} color={APP_COLORS.white}>
+        <Text type={'bold-20'} color={APP_COLORS.white} numberOfLines={3}>
           {name}
         </Text>
       </View>

@@ -1,5 +1,5 @@
-import {useNavigation} from '@react-navigation/native';
-import {useMutation} from '@tanstack/react-query';
+import {useNavigation, useRoute} from '@react-navigation/native';
+import {useMutation, useQueryClient} from '@tanstack/react-query';
 import {useFormik} from 'formik';
 import React, {useEffect, useState} from 'react';
 import {
@@ -12,7 +12,7 @@ import {
 import Config from 'react-native-config';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import * as Yup from 'yup';
-import {createRecipeApi} from '../../api/recipe';
+import {RECIPE, editRecipeByIdApi} from '../../api/recipe';
 import {
   Input,
   KeyboardContainer,
@@ -23,46 +23,52 @@ import {
 import Checkbox from '../../components/Checkbox';
 import {useMediaPicker} from '../../hooks/useMediaPicker';
 import {APP_COLORS} from '../../themes/colors';
-import {CATEGORY, EMPTY_STRING, SCREEN_WIDTH} from '../../utils/constants';
+import {CATEGORY, SCREEN_WIDTH} from '../../utils/constants';
 import {
   checkValidYoutubeLink,
   getYouTubeThumbnail,
   handleOpenLink,
   showSystemAlert,
 } from '../../utils/helpers';
-const RecipeScreen = () => {
-  const [images, setImages] = useState([]);
-  const [categories, setCategories] = useState([]);
+const EditRecipe = () => {
+  const route = useRoute();
+  const {data} = route?.params;
+  const queryClient = useQueryClient();
 
-  const [ingredients, setIngredients] = useState([]);
-  const [steps, setSteps] = useState([]);
-  const {navigate, reset} = useNavigation();
+  const numberArray = data?.categories.map(str => parseInt(str, 10));
+  const [images, setImages] = useState(data?.images || []);
+  const [categories, setCategories] = useState(numberArray || []);
+  const [ingredients, setIngredients] = useState(data?.ingredients || []);
+  const [steps, setSteps] = useState(data?.steps || []);
+  const {goBack} = useNavigation();
 
-  const {mutateAsync: createRecipe, isLoading: createRecipeLoading} =
-    useMutation(createRecipeApi, {
+  const {mutateAsync: editRecipe, isLoading: editRecipeLoading} = useMutation(
+    editRecipeByIdApi,
+    {
       onSuccess: () => {
-        reset({
-          index: 0,
-          routes: [{name: 'RecipeScreen'}],
+        queryClient.invalidateQueries({
+          queryKey: [{url: RECIPE.GET_RECIPE_CURRENT_USER}],
         });
-        navigate('HomeScreen');
+        goBack();
       },
       onError: error => {
         showSystemAlert({
           message: error,
         });
       },
-    });
+    },
+  );
+
   const formik = useFormik({
     initialValues: {
-      name: EMPTY_STRING,
-      linkVideo: 'https://youtu.be/xgsfG_GdxG8',
-      images: [],
-      categories: [],
-      serves: EMPTY_STRING,
-      cookTime: EMPTY_STRING,
-      ingredients: [],
-      steps: [],
+      name: data?.name,
+      linkVideo: data?.linkVideo,
+      images: data?.images || [],
+      categories: data?.categories || [],
+      serves: data?.serves || [],
+      cookTime: data?.cookTime,
+      ingredients: data?.ingredients || [],
+      steps: data?.steps || [],
     },
     validationSchema: Yup.object({
       name: Yup.string()
@@ -92,7 +98,7 @@ const RecipeScreen = () => {
         .required('Steps is required'),
     }),
     onSubmit: values => {
-      createRecipe(values);
+      editRecipe({id: data?._id, data: values});
     },
   });
 
@@ -178,11 +184,18 @@ const RecipeScreen = () => {
   };
 
   return (
-    <SafeAreaContainer loading={createRecipeLoading}>
+    <SafeAreaContainer loading={editRecipeLoading}>
+      <View style={styles.header}>
+        <TouchableOpacity style={styles.viewBackIcon} onPress={goBack}>
+          <LocalImage
+            imageKey={'icCaretLeftx24'}
+            style={styles.backIconLogin}
+          />
+        </TouchableOpacity>
+        <Text type="bold-16">Edit your recipe</Text>
+        <View />
+      </View>
       <KeyboardContainer style={styles.container}>
-        <Text type={'bold-20'} style={styles.titleCreate}>
-          Create recipe
-        </Text>
         <Input
           required
           style={styles.input}
@@ -190,7 +203,6 @@ const RecipeScreen = () => {
           onBlur={formik.handleBlur('name')}
           error={formik.errors.name}
           defaultValue={formik.values.name}
-          //  autoFocus={true}
           placeholder={'Enter Name Of Recipe'}
           placeholderTextColor={APP_COLORS.gray}
           label={'Enter Name Of Recipe'}
@@ -294,16 +306,18 @@ const RecipeScreen = () => {
           <View style={styles.cookTime}>
             <Icon name="clock" size={20} color={APP_COLORS.primary} />
             <Text type={'bold-14'}>Cooking Time </Text>
+
             <TextInput
+              name="cookTime"
               required
               style={styles.inputPickTime}
-              // placeholder={'(Minutes)'}
+              value={formik.values.cookTime.toString()}
               returnKeyType="next"
               keyboardType="numeric"
               placeholderTextColor={APP_COLORS.gray}
               onChangeText={formik.handleChange('cookTime')}
             />
-            <Text color={APP_COLORS.graydfsd}> (Minutes)</Text>
+            <Text color={APP_COLORS.graydfsd}>(Minutes)</Text>
           </View>
           {formik.errors.cookTime && (
             <Text color={APP_COLORS.error} type="normal-13">
@@ -348,6 +362,7 @@ const RecipeScreen = () => {
                 placeholder={' (ghi đơn vị)'}
                 placeholderTextColor={APP_COLORS.gray}
                 value={ingredient.quantity}
+                // keyboardType="numeric"
                 onChangeText={text => {
                   const newIngredients = [...ingredients];
                   newIngredients[index].quantity = text;
@@ -447,7 +462,7 @@ const RecipeScreen = () => {
     </SafeAreaContainer>
   );
 };
-export default RecipeScreen;
+export default EditRecipe;
 
 const styles = StyleSheet.create({
   iconDelete: {height: 15, width: 15},
@@ -538,9 +553,13 @@ const styles = StyleSheet.create({
   textsave: {
     color: APP_COLORS.white,
   },
-  titleCreate: {
-    alignSelf: 'center',
+  header: {
+    // alignSelf: 'center',
+    padding: 10,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
+  backIconLogin: {width: 25, height: 25},
 
   imageFood: {
     height: 95,
