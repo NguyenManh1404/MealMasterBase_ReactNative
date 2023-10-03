@@ -170,7 +170,9 @@ const useMediaPicker = (resultCallback = () => {}) => {
             resultCallback?.(result);
             return result;
           } catch (error) {
-            console.log(error);
+            return showSystemAlert({
+              message: error,
+            });
           }
         },
       });

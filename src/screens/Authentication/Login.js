@@ -22,7 +22,6 @@ const Login = () => {
   const route = useRoute();
   const {email} = route.params || {};
   const [tokenMessage, setTokenMessage] = useState();
-  console.log('🚀 ~ file: Login.js:25 ~ Login ~ tokenMessage:', tokenMessage);
 
   useEffect(() => {
     getToken();

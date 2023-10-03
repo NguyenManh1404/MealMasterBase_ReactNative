@@ -36,7 +36,7 @@ const FavoriteCard = ({item}) => {
     <TouchableOpacity
       style={styles.viewCard}
       onPress={() => {
-        navigate('PostDetail');
+        navigate('DetailRecipe');
       }}>
       <Image
         source={{

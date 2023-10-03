@@ -8,6 +8,7 @@ const appApi = axios.create({
   baseURL: Config.BASE_URL_API,
   timeout: API_TIMEOUT,
 });
+// eslint-disable-next-line no-console
 console.log(
   '🚀 ~ file: appApi.js:9 ~ Config.BASE_URL_API:',
   Config.BASE_URL_API,
@@ -17,6 +18,7 @@ console.log(
 
 appApi.interceptors.request.use(async config => {
   const token = await getString(STORAGE_KEYS.TOKEN);
+  // eslint-disable-next-line no-console
   console.log('🚀 ~ file: appApi.js:20 ~ token:', token);
   // const token = useSelector(state => state.auth.token);
 
@@ -36,6 +38,7 @@ appApi.interceptors.response.use(
   },
   async error => {
     const {
+      // eslint-disable-next-line no-unused-vars
       config,
       response: {status},
     } = error;

@@ -8,7 +8,7 @@ const RecentRecipe = ({id, name, images, creatorName}) => {
   const {navigate} = useNavigation();
 
   const onPressCard = () => {
-    navigate('PostDetail', {id});
+    navigate('DetailRecipe', {id});
   };
   return (
     <View style={styles.recentRecipeView}>

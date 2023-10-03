@@ -1,7 +1,9 @@
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import React, {useMemo} from 'react';
 import HeaderBackButton from '../components/HeaderBackButton';
+import ViewImage from '../components/ViewImage';
 import ChatScreen from '../screens/Chat';
+import DetailRecipe from '../screens/DetailRecipe';
 import EditProfile from '../screens/Profile/EditProfile';
 import {ROUTES, ROUTE_NAMES} from './routes';
 import BottomTabs from './subStacks/BottomTabs';
@@ -46,6 +48,21 @@ const MainNavigator = ({isAbleToGoHome}) => {
       {
         name: ROUTE_NAMES.EditProfile,
         component: EditProfile,
+        options: {
+          headerShown: false,
+        },
+      },
+
+      {
+        name: ROUTE_NAMES.DetailRecipe,
+        component: DetailRecipe,
+        options: {
+          headerShown: false,
+        },
+      },
+      {
+        name: ROUTE_NAMES.ViewImage,
+        component: ViewImage,
         options: {
           headerShown: false,
         },

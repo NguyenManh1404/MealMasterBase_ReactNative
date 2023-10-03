@@ -128,8 +128,11 @@ const RecipeScreen = () => {
 
   useEffect(() => {
     formik.setFieldValue('categories', categories);
+    formik.setFieldValue('ingredients', ingredients);
+    formik.setFieldValue('steps', steps);
+    formik.setFieldValue('images', images);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [categories]);
+  }, [categories, ingredients, steps, images]);
 
   const onSelectCategory = categoriesId => {
     const isWorkType = categories.some(id => id === categoriesId);
@@ -165,9 +168,9 @@ const RecipeScreen = () => {
     const removedSteps = steps.filter((_, i) => i !== index);
     setSteps();
 
-    const updatedStepsWithNumber = removedSteps.map((step, index) => ({
+    const updatedStepsWithNumber = removedSteps.map((step, _index) => ({
       ...step,
-      number: index + 1,
+      number: _index + 1,
     }));
 
     setSteps(updatedStepsWithNumber);

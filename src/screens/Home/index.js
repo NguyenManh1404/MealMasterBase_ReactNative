@@ -110,11 +110,11 @@ const HomeScreen = () => {
     },
   });
 
-  const renderRecentItem = ({item, index}) => {
+  const renderRecentItem = ({item, _index}) => {
     return (
       <RecentRecipe
         id={item?._id}
-        key={index}
+        key={_index}
         name={item?.name}
         images={item?.images}
         creatorName={item?.creatorName}
@@ -122,14 +122,14 @@ const HomeScreen = () => {
     );
   };
 
-  const renderCreatorItem = ({item, index}) => {
-    return <PopularCreator item={item} key={index} />;
+  const renderCreatorItem = ({item, _index}) => {
+    return <PopularCreator item={item} key={_index} />;
   };
 
-  const renderTrendingItem = ({item, index}) => {
+  const renderTrendingItem = ({item, _index}) => {
     return (
       <TrendingNow
-        key={index}
+        key={_index}
         id={item?._id}
         name={item?.recipe.name}
         images={item?.recipe?.images[0]}
@@ -268,7 +268,7 @@ const HomeScreen = () => {
               renderItem={renderTrendingItem}
               horizontal={true}
               showsHorizontalScrollIndicator={false}
-              keyExtractor={(__, index) => `${index}`}
+              keyExtractor={(__, _index) => `${_index}`}
             />
           </View>
         )}
@@ -314,7 +314,7 @@ const HomeScreen = () => {
               renderItem={renderRecentItem}
               horizontal={true}
               showsHorizontalScrollIndicator={false}
-              keyExtractor={(__, index) => `${index}`}
+              keyExtractor={(__, _index) => `${_index}`}
             />
           </View>
         )}
@@ -331,7 +331,7 @@ const HomeScreen = () => {
             renderItem={renderCreatorItem}
             horizontal={true}
             showsHorizontalScrollIndicator={false}
-            keyExtractor={(__, index) => `${index}`}
+            keyExtractor={(__, _index) => `${_index}`}
           />
         </View>
       </KeyboardContainer>

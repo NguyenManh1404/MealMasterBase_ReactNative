@@ -1,3 +1,4 @@
+import ViewImage from '../components/ViewImage';
 import Login from '../screens/Authentication/Login';
 import Register from '../screens/Authentication/Register';
 import ResetPassword from '../screens/Authentication/ResetPassword';
@@ -11,6 +12,7 @@ import ProfileScreen from '../screens/Profile';
 import EditProfile from '../screens/Profile/EditProfile';
 import RecipeScreen from '../screens/Recipe';
 
+import DetailRecipe from '../screens/DetailRecipe';
 const ROUTES = {
   HomeScreen,
   NotificationScreen,
@@ -24,6 +26,8 @@ const ROUTES = {
   ResetPassword,
   ChatScreen,
   EditProfile,
+  DetailRecipe,
+  ViewImage,
 };
 
 const ROUTE_NAMES = {
@@ -40,6 +44,8 @@ const ROUTE_NAMES = {
   ResetPassword: 'ResetPassword',
   ChatScreen: 'ChatScreen',
   EditProfile: 'EditProfile',
+  DetailRecipe: 'DetailRecipe',
+  ViewImage: 'ViewImage',
 };
 
 export {ROUTES, ROUTE_NAMES};

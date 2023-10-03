@@ -38,7 +38,7 @@ const TrendingNow = ({
   };
 
   const onPressCard = () => {
-    navigate('PostDetail', {id});
+    navigate('DetailRecipe', {id});
   };
   return (
     <View style={styles.trendingCardView}>

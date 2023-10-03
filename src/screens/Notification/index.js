@@ -8,15 +8,13 @@ import {SafeAreaContainer, Text} from '../../components';
 import {useRefreshOnFocus} from '../../hooks/useRefreshOnFocus';
 import InboxItem from './components/InboxItem';
 
-// export const getToken = async () => {
-//   try {
-
 const NotificationScreen = () => {
   useEffect(() => {
     const unsubscribe = messaging().onMessage(async remoteMessage => {
       refetch();
     });
     return unsubscribe;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const {
@@ -26,9 +24,6 @@ const NotificationScreen = () => {
   } = useQuery({
     queryKey: [{url: CHAT.GET_ALL_LIST_CHAT}],
     queryFn: commonQueryDetailFunction,
-    onSuccess: data => {
-      console.log('gọi list');
-    },
     select: res => {
       return res?.data;
     },

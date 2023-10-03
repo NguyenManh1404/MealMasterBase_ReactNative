@@ -14,5 +14,7 @@ const APP_COLORS = {
   modalFade: 'rgba(0, 0, 0, 0.5)',
   neutral10: '#F1F1F1',
   messBackground: '#0084FF',
+  modalFadeModify: 'rgba(0, 0, 0, 0.3)',
+  grayModify: '#F1F3F5',
 };
 export {APP_COLORS};

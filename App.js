@@ -17,26 +17,36 @@ import {APP_COLORS} from './src/themes/colors';
 const navigationRef = createNavigationContainerRef();
 
 import messaging from '@react-native-firebase/messaging';
-import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
+import {
+  QueryClient,
+  QueryClientProvider,
+  useQuery,
+} from '@tanstack/react-query';
 import {
   PERMISSIONS,
   RESULTS,
   openSettings,
   request,
 } from 'react-native-permissions';
+import {commonQueryDetailFunction} from './src/api/appApi';
+import {AUTHENTICATION_ENDPOINTS} from './src/api/auth';
 import {IS_IOS} from './src/utils/constants';
 import {showSystemAlert} from './src/utils/helpers';
 
 const AppWrapper = () => {
   // // auto CALL API to not stop
-  // useQuery({
-  //   queryKey: [{url: AUTHENTICATION_ENDPOINTS.GET_AUTH}],
-  //   queryFn: commonQueryDetailFunction,
-  //   select: res => {
-  //     return res;
-  //   },
-  //   refetchInterval: 50000,
-  // });
+  useQuery({
+    queryKey: [{url: AUTHENTICATION_ENDPOINTS.GET_AUTH}],
+    queryFn: commonQueryDetailFunction,
+    onSuccess: () => {
+      // eslint-disable-next-line no-console
+      console.log('kit server');
+    },
+    select: res => {
+      return res;
+    },
+    refetchInterval: 30000,
+  });
   // // auto CALL API to not stop
 
   const requestNotificationPermission = async () => {
@@ -61,7 +71,7 @@ const AppWrapper = () => {
           )
         ) {
           return showSystemAlert({
-            message: error?.message,
+            message: 'MealMaster',
             actions: [
               {text: 'cancel', onPress: () => {}},
               {

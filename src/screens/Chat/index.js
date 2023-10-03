@@ -56,9 +56,7 @@ const ChatScreen = () => {
   } = useQuery({
     queryKey: [{url: CHAT.GET_CHAT_WITH_ID.replace('ID', idUserReceive)}],
     queryFn: commonQueryDetailFunction,
-    onSuccess: data => {
-      console.log('gọi list');
-    },
+    onSuccess: data => {},
     select: res => {
       return res?.data;
     },
@@ -70,6 +68,7 @@ const ChatScreen = () => {
       refetch();
     });
     return unsubscribe;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const {showImagePickerOptions} = useMediaPicker(imageResult => {

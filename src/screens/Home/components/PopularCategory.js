@@ -27,7 +27,7 @@ const PopularCategory = ({id, name, images, cookTime, isFavorite}) => {
   };
 
   const onPressCard = () => {
-    navigate('PostDetail', {id});
+    navigate('DetailRecipe', {id});
   };
 
   //call api addFavorite
