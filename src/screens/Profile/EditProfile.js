@@ -105,7 +105,7 @@ const EditProfile = props => {
           />
         </TouchableOpacity>
         <TouchableOpacity style={styles.imageAvatar} onPress={pickImage}>
-          {userData?.avatar ? (
+          {formik.values.avatar ? (
             <Image
               source={{
                 uri: isURL(userData?.avatar)

@@ -1,5 +1,6 @@
 import i18next from 'i18next';
 import {ActionSheetIOS, Alert, Linking, Platform} from 'react-native';
+import Config from 'react-native-config';
 import DeviceInfo from 'react-native-device-info';
 import DialogAndroid from 'react-native-dialogs/DialogAndroid';
 import {EMPTY_STRING, IS_IOS} from './constants';
@@ -28,8 +29,17 @@ const getRandomColorHex = () => {
   return color;
 };
 
-const showSystemAlert = ({message}) => {
-  return Alert.alert('Meal Master', message);
+const showSystemAlert = ({
+  title,
+  message = i18next.t('error.somethingWrongMsg'),
+  actions = [
+    {
+      text: i18next.t('button.ok'),
+      onPress: () => {},
+    },
+  ],
+}) => {
+  return Alert.alert(title || Config.APP_NAME, message, actions);
 };
 
 const checkValidYoutubeLink = videoUrl => {

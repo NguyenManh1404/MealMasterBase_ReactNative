@@ -1,6 +1,6 @@
 const APP_COLORS = {
   primary: '#FE724C',
-  backGroundPrimary: '#ebb4ab',
+  backGroundPrimary: '#ffcac2',
   white: '#FFFF',
   secondary: '#6c757d',
   success: '#28a745',

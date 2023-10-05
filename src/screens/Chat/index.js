@@ -23,12 +23,14 @@ import {useMediaPicker} from '../../hooks/useMediaPicker';
 import {ROUTE_NAMES} from '../../navigation/routes';
 import {APP_COLORS} from '../../themes/colors';
 import {SCREEN_WIDTH} from '../../utils/constants';
-import {isEmpty, showSystemAlert} from '../../utils/helpers';
+import {getRandomColorHex, isEmpty, showSystemAlert} from '../../utils/helpers';
+
+const getRandomColorHe = getRandomColorHex();
 
 const ChatScreen = () => {
   const route = useRoute();
   const {goBack, navigate} = useNavigation();
-  const {idUserReceive} = route.params || {};
+  const {idUserReceive, avatarUserReceive} = route.params || {};
 
   const [content, setContent] = useState();
 
@@ -102,7 +104,12 @@ const ChatScreen = () => {
     }
   };
 
-  const ChatItem = ({item}) => {
+  const ChatItem = ({item, _index}) => {
+    console.log(
+      '🚀 ~ file: index.js:108 ~ ChatItem ~ _index:',
+      _index,
+      listChats?.messages.length,
+    );
     const displayedImages = item?.images.slice(0, 2);
     return (
       <View style={styles.messageContent}>
@@ -147,6 +154,29 @@ const ChatScreen = () => {
         ) : (
           <View style={styles.leftMessage}>
             <View style={styles.itemLeftMessage}>
+              {listChats?.messages.length - _index === 1 && (
+                <View>
+                  {avatarUserReceive ? (
+                    <Image
+                      source={{
+                        uri: `${Config.BASE_URL_API}/public/${avatarUserReceive}`,
+                      }}
+                      style={styles.avatarImage}
+                    />
+                  ) : (
+                    <View
+                      style={[
+                        styles.defaultAvatar,
+                        {backgroundColor: getRandomColorHe},
+                      ]}>
+                      <Text type={'bold-20'} color={APP_COLORS.white}>
+                        {item?.otherUserFullName?.charAt(0)?.toUpperCase()}
+                      </Text>
+                    </View>
+                  )}
+                </View>
+              )}
+
               <Text style={styles.txtLeftMessage} color={APP_COLORS.black}>
                 {item?.content}
               </Text>
@@ -188,7 +218,7 @@ const ChatScreen = () => {
   };
 
   const renderItem = ({item, index}) => {
-    return <ChatItem item={item} key={index} />;
+    return <ChatItem item={item} key={index} _index={index} />;
   };
 
   const onChangeText = value => {
@@ -305,6 +335,7 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 10,
     marginVertical: 10,
+    flexDirection: 'row',
   },
 
   rightMessage: {
@@ -377,10 +408,25 @@ const styles = StyleSheet.create({
   viewNumberMoreImage: {
     position: 'absolute',
     height: 100,
-    width: 100,
+    width: SCREEN_WIDTH / 4,
     backgroundColor: APP_COLORS.modalFadeModify,
     borderRadius: 5,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  avatarImage: {
+    width: 25,
+    height: 25,
+    borderRadius: 35,
+    marginRight: 5,
+  },
+  defaultAvatar: {
+    width: 30,
+    height: 30,
+    borderRadius: 35,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: APP_COLORS.blue,
+    marginRight: 5,
   },
 });

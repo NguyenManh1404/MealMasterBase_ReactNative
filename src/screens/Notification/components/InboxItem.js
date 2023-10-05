@@ -29,16 +29,32 @@ function formatRelativeTime(isoDate) {
   }
 }
 
+function isTimestampLessThanTwoMinutesAgo(timestamp) {
+  const currentTime = new Date();
+  const timeDifference = currentTime - timestamp;
+  const twoMinutesInMilliseconds = 2 * 60 * 1000; // 2 phút * 60 giây/phút * 1000 ms/giây
+  return timeDifference < twoMinutesInMilliseconds;
+}
+
 const InboxItem = ({item}) => {
   const {navigate} = useNavigation();
 
   const navigateToChat = () => {
     navigate('ChatScreen', {
       idUserReceive: item?.idUserReceive,
+      avatarUserReceive: item?.otherUserAvatar,
     });
   };
+  const newMessage = isTimestampLessThanTwoMinutesAgo(
+    new Date(item?.timeCreate),
+  );
   return (
-    <TouchableOpacity style={styles.inboxItem} onPress={navigateToChat}>
+    <TouchableOpacity
+      style={[
+        styles.inboxItem,
+        newMessage && {backgroundColor: APP_COLORS.backGroundPrimary},
+      ]}
+      onPress={navigateToChat}>
       <View>
         {item?.otherUserAvatar ? (
           <Image
@@ -67,7 +83,10 @@ const InboxItem = ({item}) => {
             <Text color={APP_COLORS.gray} style={styles.timeCreate}>
               {formatRelativeTime(item?.timeCreate)}
             </Text>
-            <Icon name="bell" size={20} color={APP_COLORS.error} solid />
+
+            {newMessage && (
+              <Icon name="bell" size={16} color={APP_COLORS.error} solid />
+            )}
           </View>
         </View>
 

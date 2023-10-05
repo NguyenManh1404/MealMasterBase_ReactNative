@@ -16,77 +16,32 @@ import {MD3LightTheme, PaperProvider} from 'react-native-paper';
 import {APP_COLORS} from './src/themes/colors';
 const navigationRef = createNavigationContainerRef();
 
-import messaging from '@react-native-firebase/messaging';
+import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
+// import {commonQueryDetailFunction} from './src/api/appApi';
+// import {AUTHENTICATION_ENDPOINTS} from './src/api/auth';
 import {
-  QueryClient,
-  QueryClientProvider,
-  useQuery,
-} from '@tanstack/react-query';
-import {
-  PERMISSIONS,
-  RESULTS,
-  openSettings,
-  request,
-} from 'react-native-permissions';
-import {commonQueryDetailFunction} from './src/api/appApi';
-import {AUTHENTICATION_ENDPOINTS} from './src/api/auth';
-import {IS_IOS} from './src/utils/constants';
-import {showSystemAlert} from './src/utils/helpers';
+  checkNotificationPermission,
+  requestNotificationPermission,
+} from './src/hooks/useNotification';
 
 const AppWrapper = () => {
   // // auto CALL API to not stop
-  useQuery({
-    queryKey: [{url: AUTHENTICATION_ENDPOINTS.GET_AUTH}],
-    queryFn: commonQueryDetailFunction,
-    onSuccess: () => {
-      // eslint-disable-next-line no-console
-      console.log('kit server');
-    },
-    select: res => {
-      return res;
-    },
-    refetchInterval: 30000,
-  });
-  // // auto CALL API to not stop
-
-  const requestNotificationPermission = async () => {
-    if (IS_IOS) {
-      await messaging().registerDeviceForRemoteMessages();
-      const authStatus = await messaging().requestPermission();
-      // await messaging().setAPNSToken('sdfghj');
-      const enabled =
-        authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
-        authStatus === messaging.AuthorizationStatus.PROVISIONAL;
-
-      if (enabled) {
-        // eslint-disable-next-line no-console
-        console.log('Authorization status:', authStatus);
-      }
-    } else {
-      try {
-        const response = await request(PERMISSIONS.ANDROID.POST_NOTIFICATIONS);
-        if (
-          [RESULTS.BLOCKED, RESULTS.UNAVAILABLE, RESULTS.DENIED].includes(
-            response,
-          )
-        ) {
-          return showSystemAlert({
-            message: 'MealMaster',
-            actions: [
-              {text: 'cancel', onPress: () => {}},
-              {
-                text: 'ok',
-                onPress: openSettings,
-              },
-            ],
-          });
-        }
-      } catch (errors) {}
-    }
-  };
+  // useQuery({
+  //   queryKey: [{url: AUTHENTICATION_ENDPOINTS.GET_AUTH}],
+  //   queryFn: commonQueryDetailFunction,
+  //   onSuccess: () => {
+  //     // eslint-disable-next-line no-console
+  //     console.log('kit server');
+  //   },
+  //   select: res => {
+  //     return res;
+  //   },
+  //   refetchInterval: 30000,
+  // });
 
   useEffect(() => {
-    requestNotificationPermission();
+    checkNotificationPermission();
+    requestNotificationPermission({});
   }, []);
 
   const {isLightMode} = useAppMode();
