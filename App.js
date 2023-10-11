@@ -1,8 +1,10 @@
 import {
   QueryClient,
   QueryClientProvider,
+  useInfiniteQuery,
   useMutation,
   useQuery,
+  useQueryClient,
 } from '@tanstack/react-query';
 import axios from 'axios';
 import React from 'react';
@@ -11,10 +13,22 @@ import {
   FlatList,
   Image,
   RefreshControl,
+  SafeAreaView,
   StyleSheet,
   Text,
   View,
 } from 'react-native';
+
+const formatReactQueryList = (data, key = 'data') => {
+  if (data?.pages) {
+    return (data?.pages || [])
+      .map(page => {
+        return page[key];
+      })
+      .flat();
+  }
+  return [];
+};
 
 const User = () => {
   //Fetch list
@@ -50,7 +64,7 @@ const User = () => {
     queryKey: ['users'],
     queryFn: fetchUsers,
     cacheTime: 0,
-    refetchOnReconnect: 'always',
+    // refetchOnReconnect: 'always',
     // refetchInterval: 2000,
   });
 
@@ -59,9 +73,52 @@ const User = () => {
       refetch();
     },
   });
+  const queryClient = useQueryClient();
+
+  const callAgainUser = async () => {
+    queryClient.invalidateQueries({queryKey: ['users']});
+  };
+
+  const fetchData = async ({page, perPage}) => {
+    const response = await axios.get(
+      `https://mastermeal.onrender.com/api/auth/get_per_page?page=${page}&perPage=${perPage}`,
+    );
+    return response.data;
+  };
+
+  const {
+    fetchNextPage,
+    fetchPreviousPage,
+    hasNextPage,
+    hasPreviousPage,
+    isFetchingNextPage,
+    isFetchingPreviousPage,
+    data: dataPage,
+  } = useInfiniteQuery({
+    queryKey: [
+      {
+        url: 'https://mastermeal.onrender.com/api/auth/get_per_page',
+        perPage: 5,
+      },
+    ],
+    queryFn: ({queryKey, pageParam = 1}) =>
+      fetchData({page: pageParam, perPage: queryKey[0].perPage}),
+    getNextPageParam: (lastPage, pages) => {
+      const {page, totalItem, perPage} = lastPage || {};
+      const currentPage = page || pages.length;
+
+      if (currentPage < Math.ceil(totalItem / perPage)) {
+        return Number(currentPage) + 1;
+      }
+
+      return undefined;
+    },
+  });
+
+  console.log('dataPage', dataPage);
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.title}>User List {status} </Text>
         {isFetching ? <Text>Fetching</Text> : <Text>Fetched</Text>}
@@ -74,7 +131,7 @@ const User = () => {
         <Text>Error: {error.message}</Text>
       ) : (
         <FlatList
-          data={data}
+          data={formatReactQueryList(dataPage)}
           refreshControl={
             <RefreshControl refreshing={isLoading} onRefresh={refetch} />
           }
@@ -92,7 +149,9 @@ const User = () => {
           )}
         />
       )}
-    </View>
+
+      <Button title="get" onPress={fetchNextPage} color={'red'} />
+    </SafeAreaView>
   );
 };
 
