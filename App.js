@@ -3,7 +3,6 @@ import {
   QueryClientProvider,
   useInfiniteQuery,
   useMutation,
-  useQuery,
   useQueryClient,
 } from '@tanstack/react-query';
 import axios from 'axios';
@@ -31,13 +30,6 @@ const formatReactQueryList = (data, key = 'data') => {
 };
 
 const User = () => {
-  //Fetch list
-  const fetchUsers = async () => {
-    const response = await axios.get(
-      'https://6514fb42dc3282a6a3cdb0e1.mockapi.io/users',
-    );
-    return response?.data;
-  };
   //Get with per page
   const fetchData = async ({page, perPage}) => {
     const response = await axios.get(
@@ -45,6 +37,15 @@ const User = () => {
     );
     return response.data;
   };
+
+  const queryClient = useQueryClient();
+
+  const queryKey = [
+    {
+      url: 'https://mastermeal.onrender.com/api/auth/get_per_page',
+      perPage: 5,
+    },
+  ];
 
   //Create
   const createUsers = async data => {
@@ -68,54 +69,45 @@ const User = () => {
   //// API API API
   //// API API API
 
-  //[useQuery]
-  const {
-    data: dataUser,
-    error,
-    isLoading,
-    status,
-    isFetching,
-    refetch,
-  } = useQuery({
-    queryKey: ['users'],
-    queryFn: fetchUsers,
-    cacheTime: 0,
-    // refetchOnReconnect: 'always',
-    // refetchInterval: 2000,
-  });
-
   //[useMutation]
   const {mutateAsync: DeleteUser} = useMutation(deleteUserById, {
-    onSuccess: () => {
-      refetch();
-      refetchPage();
+    onMutate: async id => {
+      await queryClient.cancelQueries({
+        queryKey,
+      });
+      const previousData = queryClient.getQueryData(queryKey);
+
+      if (previousData) {
+        queryClient.setQueryData(queryKey, {
+          ...previousData,
+          pages: previousData?.pages?.map(page => {
+            return {
+              ...page,
+              data: page.data?.filter(ele => {
+                return ele.id !== id;
+              }),
+            };
+          }),
+        });
+      }
+
+      return {previousData};
+    },
+    onError: (_err, _id, context) => {
+      if (context.previousData) {
+        queryClient.setQueryData(queryKey, context.previousData);
+      }
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({queryKey: queryKey});
     },
   });
 
   const {mutateAsync: CreateUser} = useMutation(createUsers, {
     onSuccess: () => {
-      refetch();
       refetchPage();
     },
   });
-
-  //[useQueryClient]
-  const queryClient = useQueryClient();
-
-  const invalidateQueriesUser = async () => {
-    queryClient.invalidateQueries({queryKey: ['users']});
-  };
-
-  //  queryClient.cancelQueries({ queryKey: ['users'] })
-  //const previousTodos = queryClient.getQueryData['users'];
-
-  const getQueryDataUser = () => {
-    const previousTodos = queryClient.getQueryData(['users']);
-  };
-
-  const setQueryDataUser = () => {
-    queryClient.setQueryData(['users'], [...dataUser, {name: 'manh'}]);
-  };
 
   //[useInfiniteQuery]
   const {
@@ -129,6 +121,10 @@ const User = () => {
     remove,
     refetch: refetchPage,
     status: statusPage,
+    isFetching,
+    isLoading,
+    error,
+    refetch,
   } = useInfiniteQuery({
     queryKey: [
       {
@@ -156,7 +152,7 @@ const User = () => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.title}>User List {status} </Text>
+        <Text style={styles.title}>User List {statusPage} </Text>
         {isFetching ? <Text>Fetching</Text> : <Text>Fetched</Text>}
         <Button
           title="AddNew"
@@ -170,19 +166,6 @@ const User = () => {
           }}
           color="green"
         />
-        {/* <Button
-          title="Get"
-          // onPress={() => {
-          //   CreateUser({
-          //     name: `Demo add id =${Math.random()
-          //       .toString(36)
-          //       .substring(2, 6)}`,
-          //     id: Math.random().toString(),
-          //   });
-          // }}
-          onPress={getQueryDataUser}
-          color="orange"
-        /> */}
       </View>
       {isLoading ? (
         <Text>Loading...</Text>
