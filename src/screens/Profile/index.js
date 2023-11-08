@@ -1,8 +1,9 @@
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import {useNavigation} from '@react-navigation/native';
-import React, {useState} from 'react';
+import React, {useCallback, useState} from 'react';
 import {
   Image,
+  NativeModules,
   ScrollView,
   StyleSheet,
   TouchableOpacity,
@@ -17,6 +18,7 @@ import {setUser} from '../../redux/AuthRedux';
 import {APP_COLORS} from '../../themes/colors';
 import {getRandomColorHex, isURL} from '../../utils/helpers';
 import YourRecipes from './components/YourRecipes';
+const {ConnectNativeModule} = NativeModules;
 
 const ProfileScreen = () => {
   const userInfo = useSelector(state => state.auth.userInfo);
@@ -42,6 +44,21 @@ const ProfileScreen = () => {
 
     setTabPageHeight(height);
   };
+
+  const goToNextApp = useCallback(async item => {
+    await ConnectNativeModule?.openApp(
+      'AwesomeProject',
+      'index.android-1.bundle',
+      {
+        text: 'Hell0',
+      },
+      false,
+      () => {},
+    );
+
+    const result = await ConnectNativeModule?.getBundleNames();
+    return result;
+  }, []);
 
   return (
     <WSafeAreaView>
@@ -118,6 +135,14 @@ const ProfileScreen = () => {
             <View style={styles.viewEditProfile}>
               <Text type="bold-14" style={styles.TextEditProfile}>
                 Edit Profile
+              </Text>
+            </View>
+          </TouchableOpacity>
+
+          <TouchableOpacity onPress={goToNextApp}>
+            <View style={styles.viewEditProfile}>
+              <Text type="bold-14" style={styles.TextEditProfile}>
+                Switch App
               </Text>
             </View>
           </TouchableOpacity>

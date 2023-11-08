@@ -9,5 +9,8 @@
     "source.sortMembers": true
   },
   "editor.tabCompletion": "on",
-  "window.zoomLevel": -1
+  "window.zoomLevel": -1,
+  "files.associations": {
+    ".C": "cpp"
+  }
 }
