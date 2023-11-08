@@ -4,6 +4,7 @@ import React, {useCallback, useState} from 'react';
 import {
   Image,
   NativeModules,
+  Platform,
   ScrollView,
   StyleSheet,
   TouchableOpacity,
@@ -48,7 +49,7 @@ const ProfileScreen = () => {
   const goToNextApp = useCallback(async item => {
     await ConnectNativeModule?.openApp(
       'AwesomeProject',
-      'index.android-1.bundle',
+      `index.${Platform.OS}-1.bundle`,
       {
         text: 'Hell0',
       },
@@ -57,6 +58,7 @@ const ProfileScreen = () => {
     );
 
     const result = await ConnectNativeModule?.getBundleNames();
+    console.log('qwwww', result);
     return result;
   }, []);
 
