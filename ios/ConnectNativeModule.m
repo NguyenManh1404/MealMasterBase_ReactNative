@@ -1,9 +1,10 @@
 //
 //  ConnectNativeModule.m
-//  SuperApp
+//  MealMaster
 //
-//  Created by Nguyen Trai on 26/04/2023.
+//  Created by manh.nguyen on 09/11/2023.
 //
+
 #import "ConnectNativeModule.h"
 #import <React/RCTRootView.h>
 #import "Promise.h"

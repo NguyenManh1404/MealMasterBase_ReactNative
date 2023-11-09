@@ -3,7 +3,6 @@ package com.mealmaster.miniapp;
 import android.os.Bundle;
 
 import com.facebook.hermes.reactexecutor.HermesExecutorFactory;
-import com.facebook.react.PackageList;
 import com.facebook.react.ReactActivity;
 import com.facebook.react.ReactInstanceManager;
 import com.facebook.react.ReactPackage;
@@ -11,7 +10,7 @@ import com.facebook.react.ReactRootView;
 import com.facebook.react.common.LifecycleState;
 import com.facebook.react.modules.core.DefaultHardwareBackBtnHandler;
 import com.facebook.react.shell.MainReactPackage;
-import com.mealmaster.BuildConfig;
+import com.rnmaps.maps.MapsPackage;
 import com.mealmaster.MainActivity;
 
 import java.util.ArrayList;
@@ -55,7 +54,9 @@ public class MiniAppActivity extends ReactActivity implements DefaultHardwareBac
     public ArrayList<ReactPackage> getPackages() {
         return new ArrayList<>(Arrays.<ReactPackage>asList(
                 new MainReactPackage(),
-                new ConnectNativePackage()
+                new ConnectNativePackage(),
+                new MapsPackage()
+
         ));
     }
 

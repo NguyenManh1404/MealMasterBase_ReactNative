@@ -4,6 +4,8 @@
 #import <React/RCTBundleURLProvider.h>
 #import <React/RCTRootView.h>
 
+#import <GoogleMaps/GoogleMaps.h>
+
 #import <React/RCTAppSetupUtils.h>
 #import <Firebase.h>
 #import <FBSDKCoreKit/FBSDKCoreKit.h> 
@@ -41,6 +43,8 @@ static NSString *const kRNConcurrentRoot = @"concurrentRoot";
   RCTBridge *bridge = [[RCTBridge alloc] initWithDelegate:self launchOptions:launchOptions];
   [[FBSDKApplicationDelegate sharedInstance] application:application
                         didFinishLaunchingWithOptions:launchOptions];
+                        
+  [GMSServices provideAPIKey:@"AIzaSyDswlxkWl-Wxyitg4T1-WXytnofuUUMNhM"];
 
 #if RCT_NEW_ARCH_ENABLED
   _contextContainer = std::make_shared<facebook::react::ContextContainer const>();

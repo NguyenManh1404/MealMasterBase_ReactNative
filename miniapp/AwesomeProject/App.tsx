@@ -1,6 +1,5 @@
-import React from 'react';
 import {
-  // Dimensions,
+  Dimensions,
   NativeModules,
   SafeAreaView,
   StyleSheet,
@@ -8,16 +7,16 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-// import MapView, {Callout, Marker, PROVIDER_GOOGLE} from 'react-native-maps';
+import MapView, {Callout, Marker, PROVIDER_GOOGLE} from 'react-native-maps';
 import AppInfo from './app.json';
 
-// const {height} = Dimensions.get('window');
+const {height} = Dimensions.get('window');
 const {ConnectNativeModule} = NativeModules;
 const App = props => {
   return (
     <SafeAreaView>
       <View>
-        {/* <MapView
+        <MapView
           provider={PROVIDER_GOOGLE}
           zoomControlEnabled={true}
           zoomEnabled={true}
@@ -39,7 +38,7 @@ const App = props => {
               <Text>Address</Text>
             </Callout>
           </Marker>
-        </MapView> */}
+        </MapView>
       </View>
       <View>
         <Text style={styles.title}>App One</Text>

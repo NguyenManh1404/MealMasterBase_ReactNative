@@ -13,7 +13,9 @@
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		AC0C3E216538F3C507B3871E /* libPods-MealMaster.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 214BF626861DEEFE5FB22659 /* libPods-MealMaster.a */; };
-		DD435E012AB2EA4300B6BA8D /* GoogleService-Info.plist in Sources */ = {isa = PBXBuildFile; fileRef = DD435E002AB2EA4300B6BA8D /* GoogleService-Info.plist */; };
+		DD10E6152AFC94910083DFC4 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = DD10E6142AFC94910083DFC4 /* GoogleService-Info.plist */; };
+		DD10E6172AFC99F90083DFC4 /* index.ios-1.bundle in Resources */ = {isa = PBXBuildFile; fileRef = DD10E6162AFC99F90083DFC4 /* index.ios-1.bundle */; };
+		DD10E61D2AFC9C2D0083DFC4 /* ConnectNativeModule.m in Sources */ = {isa = PBXBuildFile; fileRef = DD10E61C2AFC9C2D0083DFC4 /* ConnectNativeModule.m */; };
 		E2EFADB12EB407E5C967DDF6 /* libPods-MealMaster-MealMasterTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5AA985B6AE92108D854BA111 /* libPods-MealMaster-MealMasterTests.a */; };
 /* End PBXBuildFile section */
 
@@ -44,7 +46,10 @@
 		6F64EDCE25642F68BB9EF0D2 /* Pods-MealMaster-MealMasterTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MealMaster-MealMasterTests.release.xcconfig"; path = "Target Support Files/Pods-MealMaster-MealMasterTests/Pods-MealMaster-MealMasterTests.release.xcconfig"; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = MealMaster/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		D4D8D93E7C74165AF3591F20 /* Pods-MealMaster-MealMasterTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MealMaster-MealMasterTests.debug.xcconfig"; path = "Target Support Files/Pods-MealMaster-MealMasterTests/Pods-MealMaster-MealMasterTests.debug.xcconfig"; sourceTree = "<group>"; };
-		DD435E002AB2EA4300B6BA8D /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		DD10E6142AFC94910083DFC4 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
+		DD10E6162AFC99F90083DFC4 /* index.ios-1.bundle */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "index.ios-1.bundle"; sourceTree = "<group>"; };
+		DD10E61B2AFC9C130083DFC4 /* ConnectNativeModule.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ConnectNativeModule.h; sourceTree = "<group>"; };
+		DD10E61C2AFC9C2D0083DFC4 /* ConnectNativeModule.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ConnectNativeModule.m; sourceTree = "<group>"; };
 		DDA954D52A9DCE9C00CE8695 /* MealMaster.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = MealMaster.entitlements; path = MealMaster/MealMaster.entitlements; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
@@ -96,6 +101,8 @@
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */,
 				13B07FB71A68108700A75B9A /* main.m */,
+				DD10E61B2AFC9C130083DFC4 /* ConnectNativeModule.h */,
+				DD10E61C2AFC9C2D0083DFC4 /* ConnectNativeModule.m */,
 			);
 			name = MealMaster;
 			sourceTree = "<group>";
@@ -120,7 +127,8 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
-				DD435E002AB2EA4300B6BA8D /* GoogleService-Info.plist */,
+				DD10E6162AFC99F90083DFC4 /* index.ios-1.bundle */,
+				DD10E6142AFC94910083DFC4 /* GoogleService-Info.plist */,
 				BBD78D7AC51CEA395F1C20DB /* Pods */,
 				13B07FAE1A68108700A75B9A /* MealMaster */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
@@ -213,7 +221,7 @@
 						TestTargetID = 13B07F861A680F5B00A75B9A;
 					};
 					13B07F861A680F5B00A75B9A = {
-						LastSwiftMigration = 1120;
+						LastSwiftMigration = 1500;
 					};
 				};
 			};
@@ -248,6 +256,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DD10E6152AFC94910083DFC4 /* GoogleService-Info.plist in Resources */,
+				DD10E6172AFC99F90083DFC4 /* index.ios-1.bundle in Resources */,
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 			);
@@ -431,7 +441,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DD435E012AB2EA4300B6BA8D /* GoogleService-Info.plist in Sources */,
+				DD10E61D2AFC9C2D0083DFC4 /* ConnectNativeModule.m in Sources */,
 				13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 			);
@@ -524,6 +534,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = MealMaster;
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_OBJC_BRIDGING_HEADER = "MealMaster-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -554,6 +565,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = MealMaster;
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_OBJC_BRIDGING_HEADER = "MealMaster-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
